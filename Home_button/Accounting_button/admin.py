@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Report
+from .models import CustomUser, Report, Constant
 
+# Определяем админ-класс для модели CustomUser
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
@@ -11,8 +12,14 @@ class CustomUserAdmin(UserAdmin):
         ('Additional info', {'fields': ('user_type',)}),
     )
 
+# Регистрируем модель CustomUser с кастомным админ-классом
 admin.site.register(CustomUser, CustomUserAdmin)
+
+# Регистрируем модель Report
 admin.site.register(Report)
 
-
-# Register your models here.
+# Определяем админ-класс для модели Constant
+@admin.register(Constant)
+class ConstantAdmin(admin.ModelAdmin):
+    list_display = ('name', 'value', 'comment')  # Поля для отображения в списке
+    search_fields = ('name',)  # Поля для поиска

@@ -3,10 +3,33 @@
 {% block content %}
 <h1>Owner Dashboard</h1>
 <p>Welcome, {{ user.username }}!</p>
+
+<h2>Создание нового пользователя</h2>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Register</button>
+    {{ form_user.as_p }}
+    <button type="submit" name="create_user" class="btn btn-primary">Create User</button>
 </form>
-<p>Placeholder for owner content</p>
+
+<h2>Редактирование констант</h2>
+{% for constant, form_constant in constants_forms %}
+    <form method="post" class="mb-3">
+        {% csrf_token %}
+        <input type="hidden" name="constant_id" value="{{ constant.id }}">
+        <div class="form-group">
+            <label>{{ constant.name }}</label>
+            {{ form_constant.value }}
+            {{ form_constant.comment }}
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="edit_mode_{{ constant.id }}" onchange="toggleEditMode({{ constant.id }})">
+                <label class="form-check-label" for="edit_mode_{{ constant.id }}">Редактировать</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+{% endfor %}
+{% endblock %}
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'Accounting_button/js/owner_dashboard.js' %}"></script>
 {% endblock %}
