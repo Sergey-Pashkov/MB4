@@ -1,7 +1,7 @@
 function toggleEditMode(constantId) {
   var checkbox = document.getElementById('edit_mode_' + constantId);
-  var valueField = document.querySelector('input[name="value"]');
-  var commentField = document.querySelector('textarea[name="comment"]');
+  var valueField = document.getElementById('value_' + constantId);
+  var commentField = document.getElementById('comment_' + constantId);
 
   if (checkbox.checked) {
       valueField.removeAttribute('readonly');
