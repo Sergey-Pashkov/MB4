@@ -1,7 +1,8 @@
-{% extends 'Accounting_button/base.html' %}
+{% extends "Accounting_button/base.html" %}
 {% block title %}Owner Dashboard{% endblock %}
 {% block content %}
 <h1>Owner Dashboard</h1>
+<p>Welcome, {{ user.username }}!</p>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

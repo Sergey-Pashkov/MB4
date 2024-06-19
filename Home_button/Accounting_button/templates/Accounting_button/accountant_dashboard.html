@@ -1,6 +1,8 @@
-{% extends 'Accounting_button/base.html' %}
+
+{% extends "Accounting_button/base.html" %}
 {% block title %}Accountant Dashboard{% endblock %}
 {% block content %}
 <h1>Accountant Dashboard</h1>
+<p>Welcome, {{ user.username }}!</p>
 <p>Placeholder for accountant content</p>
 {% endblock %}
