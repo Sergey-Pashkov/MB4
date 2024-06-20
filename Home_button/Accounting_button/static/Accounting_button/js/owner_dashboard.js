@@ -1,13 +1,22 @@
 function toggleEditMode(constantId) {
-  var checkbox = document.getElementById('edit_mode_' + constantId);
-  var valueField = document.getElementById('value_' + constantId);
-  var commentField = document.getElementById('comment_' + constantId);
+    const isChecked = document.getElementById('edit_mode_' + constantId).checked;
+    const valueField = document.getElementById('value_' + constantId);
+    const commentField = document.getElementById('comment_' + constantId);
 
-  if (checkbox.checked) {
-      valueField.removeAttribute('readonly');
-      commentField.removeAttribute('readonly');
-  } else {
-      valueField.setAttribute('readonly', 'readonly');
-      commentField.setAttribute('readonly', 'readonly');
-  }
+    if (isChecked) {
+        valueField.removeAttribute('readonly');
+        commentField.removeAttribute('readonly');
+    } else {
+        valueField.setAttribute('readonly', 'readonly');
+        commentField.setAttribute('readonly', 'readonly');
+    }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const constantId = this.id.split('_')[2];
+            toggleEditMode(constantId);
+        });
+    });
+});

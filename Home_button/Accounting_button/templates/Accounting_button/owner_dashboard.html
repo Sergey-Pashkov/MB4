@@ -1,6 +1,8 @@
 {% extends "Accounting_button/base.html" %}
 {% load static %}
+
 {% block title %}Owner Dashboard{% endblock %}
+
 {% block content %}
 <h1>Owner Dashboard</h1>
 <p>Welcome, {{ user.username }}!</p>
@@ -19,48 +21,48 @@
         <input type="hidden" name="constant_id" value="{{ constant.id }}">
         <div class="form-group">
             <label>{{ constant.name }}</label>
-            <input type="text" name="value" id="value_{{ constant.id }}" class="form-control" value="{{ form_constant.value.value }}" 
-                {% if constant.name == "Накладные расходы на 1 час фонда рабочего времени (руб.)" %}readonly{% endif %}>
-            <input type="text" name="comment" id="comment_{{ constant.id }}" class="form-control" value="{{ form_constant.comment.value }}" 
-                {% if constant.name == "Накладные расходы на 1 час фонда рабочего времени (руб.)" %}readonly{% endif %}>
+            {{ form_constant.value }}
+            {{ form_constant.comment }}
             <div class="form-check">
-                {% if constant.name != "Накладные расходы на 1 час фонда рабочего времени (руб.)" %}
-                    <input type="checkbox" class="form-check-input" id="edit_mode_{{ constant.id }}" onchange="toggleEditMode({{ constant.id }})">
-                    <label class="form-check-label" for="edit_mode_{{ constant.id }}">Редактировать</label>
-                {% endif %}
+                <input type="checkbox" class="form-check-input" id="edit_mode_{{ constant.id }}" onchange="toggleEditMode({{ constant.id }})">
+                <label class="form-check-label" for="edit_mode_{{ constant.id }}">Редактировать</label>
             </div>
         </div>
         {% if constant.name != "Накладные расходы на 1 час фонда рабочего времени (руб.)" %}
-            <button type="submit" class="btn btn-primary">Save</button>
+        <button type="submit" class="btn btn-primary">Save</button>
         {% endif %}
     </form>
 {% endfor %}
 {% endblock %}
+
 {% block extra_js %}
 <script>
-    function toggleEditMode(constantId) {
-        var checkbox = document.getElementById('edit_mode_' + constantId);
-        var valueField = document.getElementById('value_' + constantId);
-        var commentField = document.getElementById('comment_' + constantId);
+function toggleEditMode(constantId) {
+    const isChecked = document.getElementById('edit_mode_' + constantId).checked;
+    const valueField = document.getElementById('id_value_' + constantId);
+    const commentField = document.getElementById('id_comment_' + constantId);
 
-        if (checkbox.checked) {
-            valueField.removeAttribute('readonly');
-            commentField.removeAttribute('readonly');
-        } else {
-            valueField.setAttribute('readonly', 'readonly');
-            commentField.setAttribute('readonly', 'readonly');
-        }
+    if (isChecked) {
+        valueField.removeAttribute('readonly');
+        commentField.removeAttribute('readonly');
+    } else {
+        valueField.setAttribute('readonly', 'readonly');
+        commentField.setAttribute('readonly', 'readonly');
     }
+}
 
-    document.addEventListener("DOMContentLoaded", function() {
-        {% for constant, form_constant in constants_forms %}
-            var valueField = document.getElementById('value_{{ constant.id }}');
-            var commentField = document.getElementById('comment_{{ constant.id }}');
-            {% if constant.name != "Накладные расходы на 1 час фонда рабочего времени (руб.)" %}
-                valueField.setAttribute('readonly', 'readonly');
-                commentField.setAttribute('readonly', 'readonly');
-            {% endif %}
-        {% endfor %}
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.form-check-input').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            const constantId = this.id.split('_')[2];
+            toggleEditMode(constantId);
+        });
     });
+
+    // Initial setup to make fields readonly
+    document.querySelectorAll('input[id^="id_value_"], textarea[id^="id_comment_"]').forEach(function(field) {
+        field.setAttribute('readonly', 'readonly');
+    });
+});
 </script>
 {% endblock %}

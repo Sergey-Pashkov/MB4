@@ -48,42 +48,32 @@ def director_dashboard(request):
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Constant
-from .forms import ConstantForm, CustomUserCreationForm
+from .forms import CustomUserCreationForm, ConstantForm
+
 
 @login_required
 def owner_dashboard(request):
-    if request.user.user_type != 'owner':
-        return redirect('dashboard')
-
-    form_user = CustomUserCreationForm()
-    constants = Constant.objects.all()
-    forms_constant = []
-
-    if request.method == 'POST':
-        if 'create_user' in request.POST:
-            form_user = CustomUserCreationForm(request.POST)
-            if form_user.is_valid():
-                form_user.save()
-                return redirect('owner_dashboard')
-        else:
-            constant_id = request.POST.get('constant_id')
-            constant = Constant.objects.get(pk=constant_id)
-            form_constant = ConstantForm(request.POST, instance=constant, initial={'edit_mode': True})
-            if form_constant.is_valid():
-                if form_constant.cleaned_data['edit_mode']:
-                    if constant.name not in ["Накладные расходы на 1 час фонда рабочего времени (руб.)"]:
-                        constant.value = form_constant.cleaned_data['value']
-                    constant.comment = form_constant.cleaned_data['comment']
-                    constant.save()
-                return redirect('owner_dashboard')
+    if request.method == 'POST' and 'create_user' in request.POST:
+        form_user = CustomUserCreationForm(request.POST)
+        if form_user.is_valid():
+            form_user.save()
+            return redirect('owner_dashboard')
     else:
-        for constant in constants:
-            form_constant = ConstantForm(instance=constant, initial={'edit_mode': False})
-            forms_constant.append((constant, form_constant))
+        form_user = CustomUserCreationForm()
+
+    if request.method == 'POST' and 'constant_id' in request.POST:
+        constant_id = request.POST.get('constant_id')
+        constant = Constant.objects.get(id=constant_id)
+        form_constant = ConstantForm(request.POST, instance=constant)
+        if form_constant.is_valid():
+            form_constant.save()
+            return redirect('owner_dashboard')
+    else:
+        constants = Constant.objects.all()
+        constants_forms = [(constant, ConstantForm(instance=constant)) for constant in constants]
 
     return render(request, 'Accounting_button/owner_dashboard.html', {
         'form_user': form_user,
-        'constants_forms': forms_constant,
-        'user': request.user
+        'constants_forms': constants_forms,
+        'user': request.user,
     })
-
