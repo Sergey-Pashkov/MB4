@@ -1,0 +1,10 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Create Client{% endblock %}
+{% block content %}
+<h1>Create Client</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ client_form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+{% endblock %}

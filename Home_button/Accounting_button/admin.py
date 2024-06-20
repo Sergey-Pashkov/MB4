@@ -24,10 +24,13 @@ class ConstantAdmin(admin.ModelAdmin):
     list_display = ('name', 'value', 'comment')  # Поля для отображения в списке
     search_fields = ('name',)  # Поля для поиска
 
+
+
+# admin.py
+from django.contrib import admin
 from .models import Client
 
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'organization_form', 'inn', 'contract_price', 'tax_system', 'contract_number_and_date', 'contact_person', 'phone', 'email', 'postal_address', 'comments']
-    search_fields = ['name', 'inn']
+    list_display = ('name', 'org_form', 'inn', 'contract_price', 'tax_system', 'contract_details', 'contact_person', 'phone', 'email', 'postal_address', 'comments')
 
 admin.site.register(Client, ClientAdmin)

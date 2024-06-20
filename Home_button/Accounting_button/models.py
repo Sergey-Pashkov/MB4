@@ -44,21 +44,19 @@ class Constant(models.Model):
 # Create your models here.
 from django.db import models
 
-from django.db import models
-
+# models.py
 class Client(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, verbose_name='Наименование', blank=False)
-    organization_form = models.CharField(max_length=255, verbose_name='Организационная форма', blank=True)
-    inn = models.CharField(max_length=12, verbose_name='ИНН', blank=False)
-    contract_price = models.IntegerField(verbose_name='Цена договора', blank=False)
-    tax_system = models.CharField(max_length=255, verbose_name='Система налогообложения', blank=True)
-    contract_number_and_date = models.CharField(max_length=255, verbose_name='Дата и номер договора', blank=True)
-    contact_person = models.CharField(max_length=255, verbose_name='Контактное лицо', blank=True, default='')
-    phone = models.CharField(max_length=15, verbose_name='Телефон', blank=True, default='')
-    email = models.EmailField(verbose_name='Электронная почта', blank=True, default='')
-    postal_address = models.CharField(max_length=255, verbose_name='Почтовый адрес', blank=True)
-    comments = models.TextField(verbose_name='Комментарии', blank=True, default='')
+    name = models.CharField(max_length=255, verbose_name="Наименование", blank=False, null=False)
+    org_form = models.CharField(max_length=255, verbose_name="Организационная форма", blank=True, null=True)
+    inn = models.CharField(max_length=12, verbose_name="ИНН", blank=False, null=False)
+    contract_price = models.IntegerField(verbose_name="Цена договора", blank=False, null=False)
+    tax_system = models.CharField(max_length=255, verbose_name="Система налогообложения", blank=True, null=True)
+    contract_details = models.CharField(max_length=255, verbose_name="Дата и номер договора", blank=True, null=True)
+    contact_person = models.CharField(max_length=255, verbose_name="Контактное лицо", blank=False, null=False)
+    phone = models.CharField(max_length=20, verbose_name="Телефон", blank=False, null=False)
+    email = models.EmailField(verbose_name="Электронная почта", blank=False, null=False)
+    postal_address = models.CharField(max_length=255, verbose_name="Почтовый адрес", blank=False, null=False)
+    comments = models.TextField(verbose_name="Комментарии", blank=True, null=True)
 
     def __str__(self):
         return self.name

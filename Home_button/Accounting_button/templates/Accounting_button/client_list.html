@@ -1,0 +1,41 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Client List{% endblock %}
+{% block content %}
+<h1>Client List</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Org Form</th>
+            <th>INN</th>
+            <th>Contract Price</th>
+            <th>Tax System</th>
+            <th>Contract Details</th>
+            <th>Contact Person</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Postal Address</th>
+            <th>Comments</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for client in clients %}
+        <tr>
+            <td>{{ client.id }}</td>
+            <td>{{ client.name }}</td>
+            <td>{{ client.org_form }}</td>
+            <td>{{ client.inn }}</td>
+            <td>{{ client.contract_price }}</td>
+            <td>{{ client.tax_system }}</td>
+            <td>{{ client.contract_details }}</td>
+            <td>{{ client.contact_person }}</td>
+            <td>{{ client.phone }}</td>
+            <td>{{ client.email }}</td>
+            <td>{{ client.postal_address }}</td>
+            <td>{{ client.comments }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
