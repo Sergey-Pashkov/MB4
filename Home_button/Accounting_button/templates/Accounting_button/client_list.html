@@ -1,7 +1,12 @@
+<!-- templates/Accounting_button/client_list.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Client List{% endblock %}
 {% block content %}
 <h1>Client List</h1>
+
+<!-- Ссылка на возврат на дашборд бухгалтера -->
+<a href="{% url 'accountant_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+
 <table class="table">
     <thead>
         <tr>
@@ -17,6 +22,7 @@
             <th>Email</th>
             <th>Postal Address</th>
             <th>Comments</th>
+            <th>Edit</th>
         </tr>
     </thead>
     <tbody>
@@ -34,6 +40,7 @@
             <td>{{ client.email }}</td>
             <td>{{ client.postal_address }}</td>
             <td>{{ client.comments }}</td>
+            <td><a href="{% url 'client_edit' client.id %}" class="btn btn-primary">Edit</a></td>
         </tr>
         {% endfor %}
     </tbody>

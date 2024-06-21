@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
+
 from .models import CustomUser, Constant, Client
 from .forms import CustomUserCreationForm, ConstantForm, ClientForm
 from django.contrib.auth.decorators import login_required
@@ -44,12 +45,6 @@ def director_dashboard(request):
         'user': request.user  # Передача текущего пользователя в контекст
     })
 
-# Список клиентов
-@login_required
-def client_list(request):
-    clients = Client.objects.all()  # Получение всех клиентов из базы данных
-    return render(request, 'Accounting_button/client_list.html', {'clients': clients})
-
 # Дашборд собственника с обработкой формы создания пользователя и редактирования констант
 @login_required
 def owner_dashboard(request):
@@ -77,3 +72,26 @@ def owner_dashboard(request):
         'constants_forms': constants_forms,
         'user': request.user,
     })
+
+
+@login_required
+def client_list(request):
+    clients = Client.objects.all()
+    total_clients = clients.count()  # Считаем общее количество клиентов
+    return render(request, 'Accounting_button/client_list.html', {
+        'clients': clients,
+        'total_clients': total_clients  # Передаем общее количество клиентов в контекст
+    })
+
+
+@login_required
+def client_edit(request, client_id):
+    client = get_object_or_404(Client, id=client_id)
+    if request.method == 'POST':
+        form = ClientForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            return redirect('client_list')
+    else:
+        form = ClientForm(instance=client)
+    return render(request, 'Accounting_button/client_edit.html', {'form': form, 'client': client})
