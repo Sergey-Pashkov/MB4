@@ -1,24 +1,9 @@
-'''''
-@login_required
-def owner_dashboard(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('owner_dashboard')
-    else:
-        form = CustomUserCreationForm()
-    return render(request, 'Accounting_button/owner_dashboard.html', {'form': form, 'user': request.user})
-
-'''
 from django.shortcuts import render, redirect
-from .models import CustomUser
-from .models import Constant
-from .forms import ConstantForm, CustomUserCreationForm 
+from .models import CustomUser, Constant, Client
+from .forms import CustomUserCreationForm, ConstantForm, ClientForm
 from django.contrib.auth.decorators import login_required
-from .forms import CustomUserCreationForm, ClientForm
-from .models import Client 
 
+# Проверка типа пользователя и перенаправление на соответствующий дашборд
 @login_required
 def dashboard(request):
     if request.user.user_type == 'accountant':
@@ -28,50 +13,44 @@ def dashboard(request):
     elif request.user.user_type == 'owner':
         return redirect('owner_dashboard')
 
+# Дашборд бухгалтера
 @login_required
 def accountant_dashboard(request):
     return render(request, 'Accounting_button/accountant_dashboard.html', {'user': request.user})
 
+# Дашборд директора с обработкой формы создания пользователя и клиента
 @login_required
 def director_dashboard(request):
     if request.method == 'POST':
+        # Обработка формы регистрации нового пользователя
         if 'register' in request.POST:
             user_form = CustomUserCreationForm(request.POST)
             if user_form.is_valid():
                 user_form.save()
                 return redirect('director_dashboard')
+        # Обработка формы создания нового клиента
         elif 'save_client' in request.POST:
             client_form = ClientForm(request.POST)
             if client_form.is_valid():
                 client_form.save()
                 return redirect('director_dashboard')
     else:
-        user_form = CustomUserCreationForm()
-        client_form = ClientForm()
+        user_form = CustomUserCreationForm()  # Инициализация пустой формы для создания пользователя
+        client_form = ClientForm()  # Инициализация пустой формы для создания клиента
+    
     return render(request, 'Accounting_button/director_dashboard.html', {
-        'user_form': user_form,
-        'client_form': client_form,
-        'user': request.user
+        'user_form': user_form,  # Передача формы создания пользователя в контекст
+        'client_form': client_form,  # Передача формы создания клиента в контекст
+        'user': request.user  # Передача текущего пользователя в контекст
     })
 
+# Список клиентов
 @login_required
 def client_list(request):
-    clients = Client.objects.all()
+    clients = Client.objects.all()  # Получение всех клиентов из базы данных
     return render(request, 'Accounting_button/client_list.html', {'clients': clients})
 
-@login_required
-def client_create_view(request):
-    if request.method == 'POST':
-        client_form = ClientForm(request.POST)
-        if client_form.is_valid():
-            client_form.save()
-            return redirect('client_list')
-    else:
-        client_form = ClientForm()
-    return render(request, 'Accounting_button/client_create.html', {'client_form': client_form})
-
-
-
+# Дашборд собственника с обработкой формы создания пользователя и редактирования констант
 @login_required
 def owner_dashboard(request):
     if request.method == 'POST' and 'create_user' in request.POST:
