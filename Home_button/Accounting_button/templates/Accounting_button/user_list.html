@@ -1,0 +1,35 @@
+<!-- templates/Accounting_button/user_list.html -->
+{% extends "Accounting_button/base.html" %}
+{% block title %}User List{% endblock %}
+{% block content %}
+<h1>User List</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>User Type</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.user_type }}</td>
+            <td>
+                <a href="{% url 'user_edit' user.id %}">Edit</a>
+                <form method="post" action="{% url 'user_delete' user.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<p>
+    <a href="{% url 'user_add' %}" class="btn btn-primary">Add New User</a>
+</p>
+{% endblock %}

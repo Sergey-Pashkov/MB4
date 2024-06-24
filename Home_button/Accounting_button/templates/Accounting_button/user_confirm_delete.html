@@ -1,0 +1,11 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Delete User{% endblock %}
+{% block content %}
+<h1>Delete User: {{ user.username }}</h1>
+<p>Are you sure you want to delete this user?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'user_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

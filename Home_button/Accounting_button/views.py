@@ -95,3 +95,59 @@ def client_edit(request, client_id):
     else:
         form = ClientForm(instance=client)
     return render(request, 'Accounting_button/client_edit.html', {'form': form, 'client': client})
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from .models import CustomUser
+
+@login_required
+def user_list(request):
+    # Получаем всех пользователей
+    users = CustomUser.objects.all()
+    # Рендерим шаблон с пользователями
+    return render(request, 'Accounting_button/user_list.html', {'users': users})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import CustomUser
+from .forms import CustomUserChangeForm
+
+@login_required
+def user_edit(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        form = CustomUserChangeForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('user_list')
+    else:
+        form = CustomUserChangeForm(instance=user)
+    return render(request, 'Accounting_button/user_edit.html', {'form': form, 'user': user})
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .forms import CustomUserCreationForm
+
+@login_required
+def user_add(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('user_list')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'Accounting_button/user_add.html', {'form': form})
+
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import CustomUser
+
+@login_required
+def user_delete(request, user_id):
+    user = get_object_or_404(CustomUser, id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        return redirect('user_list')
+    return render(request, 'Accounting_button/user_confirm_delete.html', {'user': user})

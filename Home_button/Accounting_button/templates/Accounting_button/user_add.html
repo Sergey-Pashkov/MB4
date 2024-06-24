@@ -1,0 +1,13 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Add User{% endblock %}
+{% block content %}
+<h1>Add User</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Add User</button>
+</form>
+<p>
+    <a href="{% url 'user_list' %}">Back to User List</a>
+</p>
+{% endblock %}

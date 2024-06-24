@@ -32,3 +32,12 @@ class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
         fields = ['name', 'org_form', 'inn', 'contract_price', 'tax_system', 'contract_details', 'contact_person', 'phone', 'email', 'postal_address', 'comments']
+
+
+from django import forms
+from .models import CustomUser
+
+class CustomUserChangeForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'first_name', 'last_name', 'user_type']
