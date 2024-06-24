@@ -151,3 +151,26 @@ def user_delete(request, user_id):
         user.delete()
         return redirect('user_list')
     return render(request, 'Accounting_button/user_confirm_delete.html', {'user': user})
+
+@login_required
+def client_create(request):
+    if request.method == 'POST':
+        client_form = ClientForm(request.POST)
+        if client_form.is_valid():
+            client_form.save()
+            return redirect('client_list')
+    else:
+        client_form = ClientForm()
+    return render(request, 'Accounting_button/client_create.html', {'client_form': client_form})
+
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+@login_required
+def client_delete(request, client_id):
+    client = get_object_or_404(Client, id=client_id)
+    if request.method == 'POST':
+        client.delete()
+        return HttpResponseRedirect(reverse('client_list'))
+    return render(request, 'Accounting_button/client_confirm_delete.html', {'client': client})

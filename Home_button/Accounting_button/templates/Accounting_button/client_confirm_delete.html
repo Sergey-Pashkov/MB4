@@ -1,0 +1,12 @@
+<!-- templates/Accounting_button/client_confirm_delete.html -->
+{% extends "Accounting_button/base.html" %}
+{% block title %}Delete Client{% endblock %}
+{% block content %}
+<h1>Delete Client</h1>
+<p>Are you sure you want to delete "{{ client.name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="{% url 'client_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

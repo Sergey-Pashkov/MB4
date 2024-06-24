@@ -3,10 +3,7 @@
 {% block title %}Client List{% endblock %}
 {% block content %}
 <h1>Client List</h1>
-
-<!-- Ссылка на возврат на дашборд бухгалтера -->
-<a href="{% url 'accountant_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
-
+<a href="{% url 'client_create' %}" class="btn btn-primary mb-3">Add Client</a>
 <table class="table">
     <thead>
         <tr>
@@ -22,7 +19,7 @@
             <th>Email</th>
             <th>Postal Address</th>
             <th>Comments</th>
-            <th>Edit</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -40,7 +37,13 @@
             <td>{{ client.email }}</td>
             <td>{{ client.postal_address }}</td>
             <td>{{ client.comments }}</td>
-            <td><a href="{% url 'client_edit' client.id %}" class="btn btn-primary">Edit</a></td>
+            <td>
+                <a href="{% url 'client_edit' client.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <form method="post" action="{% url 'client_delete' client.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
