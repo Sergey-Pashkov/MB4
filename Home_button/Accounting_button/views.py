@@ -20,30 +20,13 @@ def accountant_dashboard(request):
     return render(request, 'Accounting_button/accountant_dashboard.html', {'user': request.user})
 
 # Дашборд директора с обработкой формы создания пользователя и клиента
+# views.py
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def director_dashboard(request):
-    if request.method == 'POST':
-        # Обработка формы регистрации нового пользователя
-        if 'register' in request.POST:
-            user_form = CustomUserCreationForm(request.POST)
-            if user_form.is_valid():
-                user_form.save()
-                return redirect('director_dashboard')
-        # Обработка формы создания нового клиента
-        elif 'save_client' in request.POST:
-            client_form = ClientForm(request.POST)
-            if client_form.is_valid():
-                client_form.save()
-                return redirect('director_dashboard')
-    else:
-        user_form = CustomUserCreationForm()  # Инициализация пустой формы для создания пользователя
-        client_form = ClientForm()  # Инициализация пустой формы для создания клиента
-    
-    return render(request, 'Accounting_button/director_dashboard.html', {
-        'user_form': user_form,  # Передача формы создания пользователя в контекст
-        'client_form': client_form,  # Передача формы создания клиента в контекст
-        'user': request.user  # Передача текущего пользователя в контекст
-    })
+    return render(request, 'Accounting_button/director_dashboard.html', {'user': request.user})
 
 # Дашборд собственника с обработкой формы создания пользователя и редактирования констант
 @login_required

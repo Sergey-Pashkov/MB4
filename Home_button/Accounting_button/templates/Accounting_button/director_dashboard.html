@@ -5,24 +5,7 @@
 <h1>Director Dashboard</h1>
 <p>Welcome, {{ user.username }}!</p>
 
-<!-- Форма для создания нового пользователя -->
-<form method="post" action="{% url 'director_dashboard' %}">
-    {% csrf_token %}
-    {{ user_form.as_p }}
-    <button type="submit" class="btn btn-primary">Register</button>
-</form>
+<!-- Кнопка для перехода в список клиентов -->
+<a href="{% url 'client_list' %}" class="btn btn-primary">View Client List</a>
 
-<!-- Форма для создания клиента -->
-<h2>Create Client</h2>
-<form method="post" action="{% url 'director_dashboard' %}">
-    {% csrf_token %}
-    {{ client_form.as_p }}
-    <button type="submit" name="save_client" class="btn btn-primary">Save</button>
-</form>
-
-<!-- Ссылка на список клиентов -->
-<h2>Client List</h2>
-<a href="{% url 'client_list' %}" class="btn btn-secondary">View Clients</a>
-
-<p>Placeholder for director content</p>
 {% endblock %}
