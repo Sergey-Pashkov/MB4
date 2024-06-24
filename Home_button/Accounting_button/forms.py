@@ -41,3 +41,12 @@ class CustomUserChangeForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['username', 'email', 'first_name', 'last_name', 'user_type']
+
+from django import forms
+from .models import Constant
+
+
+class ConstantForm(forms.ModelForm):
+    class Meta:
+        model = Constant
+        fields = ['value', 'comment']

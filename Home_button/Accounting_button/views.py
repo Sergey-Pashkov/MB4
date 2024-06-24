@@ -174,3 +174,25 @@ def client_delete(request, client_id):
         client.delete()
         return HttpResponseRedirect(reverse('client_list'))
     return render(request, 'Accounting_button/client_confirm_delete.html', {'client': client})
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Constant
+from .forms import ConstantForm
+
+@login_required
+def constant_list(request):
+    constants = Constant.objects.all()
+    return render(request, 'Accounting_button/constant_list.html', {'constants': constants})
+
+@login_required
+def constant_edit(request, constant_id):
+    constant = get_object_or_404(Constant, id=constant_id)
+    if request.method == 'POST':
+        form = ConstantForm(request.POST, instance=constant)
+        if form.is_valid():
+            form.save()
+            return redirect('constant_list')
+    else:
+        form = ConstantForm(instance=constant)
+    return render(request, 'Accounting_button/constant_edit.html', {'form': form, 'constant': constant})

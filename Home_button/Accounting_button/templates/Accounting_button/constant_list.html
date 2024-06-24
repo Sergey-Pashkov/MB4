@@ -1,3 +1,4 @@
+<!-- templates/Accounting_button/constant_list.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Constant List{% endblock %}
 {% block content %}
@@ -5,22 +6,20 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Name</th>
             <th>Value</th>
-            <th>Description</th>
+            <th>Comment</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         {% for constant in constants %}
         <tr>
-            <td>{{ constant.id }}</td>
             <td>{{ constant.name }}</td>
             <td>{{ constant.value }}</td>
-            <td>{{ constant.description }}</td>
+            <td>{{ constant.comment }}</td>
             <td>
-                <a href="{% url 'constant_edit' constant.id %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'constant_edit' constant.id %}" class="btn btn-warning btn-sm">Edit</a>
             </td>
         </tr>
         {% endfor %}

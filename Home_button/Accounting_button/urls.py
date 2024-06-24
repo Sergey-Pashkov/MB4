@@ -18,4 +18,7 @@ urlpatterns = [
     path('users/edit/<int:user_id>/', views.user_edit, name='user_edit'),
     path('users/delete/<int:user_id>/', views.user_delete, name='user_delete'),
         # URL для удаления пользователя
+   path('constants/', views.constant_list, name='constant_list'),
+   path('constants/edit/<int:constant_id>/', views.constant_edit, name='constant_edit'),
 ]
+
