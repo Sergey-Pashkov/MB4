@@ -1,0 +1,30 @@
+<!-- templates/Accounting_button/constant_list.html -->
+{% extends "Accounting_button/base.html" %}
+{% block title %}Edit Constants{% endblock %}
+{% block content %}
+<h1>Edit Constants</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Constant Name</th>
+            <th>Value</th>
+            <th>Comment</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for constant, form in constants_forms %}
+        <tr>
+            <td>{{ constant.name }}</td>
+            <td>{{ form.value.value }}</td>
+            <td>{{ form.comment.value }}</td>
+            <td>
+                <a href="{% url 'constant_edit' constant.id %}" class="btn btn-primary">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

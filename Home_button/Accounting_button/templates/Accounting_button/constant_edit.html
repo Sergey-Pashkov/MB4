@@ -1,0 +1,12 @@
+<!-- templates/Accounting_button/constant_edit.html -->
+{% extends "Accounting_button/base.html" %}
+{% block title %}Edit Constant{% endblock %}
+{% block content %}
+<h1>Edit Constant</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<a href="{% url 'constant_list' %}" class="btn btn-secondary">Back to Constant List</a>
+{% endblock %}

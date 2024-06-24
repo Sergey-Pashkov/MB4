@@ -19,59 +19,13 @@ def dashboard(request):
 def accountant_dashboard(request):
     return render(request, 'Accounting_button/accountant_dashboard.html', {'user': request.user})
 
-# Дашборд директора с обработкой формы создания пользователя и клиента
 @login_required
 def director_dashboard(request):
-    if request.method == 'POST':
-        # Обработка формы регистрации нового пользователя
-        if 'register' in request.POST:
-            user_form = CustomUserCreationForm(request.POST)
-            if user_form.is_valid():
-                user_form.save()
-                return redirect('director_dashboard')
-        # Обработка формы создания нового клиента
-        elif 'save_client' in request.POST:
-            client_form = ClientForm(request.POST)
-            if client_form.is_valid():
-                client_form.save()
-                return redirect('director_dashboard')
-    else:
-        user_form = CustomUserCreationForm()  # Инициализация пустой формы для создания пользователя
-        client_form = ClientForm()  # Инициализация пустой формы для создания клиента
-    
-    return render(request, 'Accounting_button/director_dashboard.html', {
-        'user_form': user_form,  # Передача формы создания пользователя в контекст
-        'client_form': client_form,  # Передача формы создания клиента в контекст
-        'user': request.user  # Передача текущего пользователя в контекст
-    })
+    return render(request, 'Accounting_button/director_dashboard.html', {'user': request.user})
 
-# Дашборд собственника с обработкой формы создания пользователя и редактирования констант
 @login_required
 def owner_dashboard(request):
-    if request.method == 'POST' and 'create_user' in request.POST:
-        form_user = CustomUserCreationForm(request.POST)
-        if form_user.is_valid():
-            form_user.save()
-            return redirect('owner_dashboard')
-    else:
-        form_user = CustomUserCreationForm()
-
-    if request.method == 'POST' and 'constant_id' in request.POST:
-        constant_id = request.POST.get('constant_id')
-        constant = Constant.objects.get(id=constant_id)
-        form_constant = ConstantForm(request.POST, instance=constant)
-        if form_constant.is_valid():
-            form_constant.save()
-            return redirect('owner_dashboard')
-    else:
-        constants = Constant.objects.all()
-        constants_forms = [(constant, ConstantForm(instance=constant)) for constant in constants]
-
-    return render(request, 'Accounting_button/owner_dashboard.html', {
-        'form_user': form_user,
-        'constants_forms': constants_forms,
-        'user': request.user,
-    })
+    return render(request, 'Accounting_button/owner_dashboard.html', {'user': request.user})
 
 
 @login_required
@@ -151,3 +105,44 @@ def user_delete(request, user_id):
         user.delete()
         return redirect('user_list')
     return render(request, 'Accounting_button/user_confirm_delete.html', {'user': user})
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import Constant
+from .forms import ConstantForm
+
+@login_required
+def constant_list(request):
+    if request.method == 'POST' and 'constant_id' in request.POST:
+        constant_id = request.POST.get('constant_id')
+        constant = Constant.objects.get(id=constant_id)
+        form_constant = ConstantForm(request.POST, instance=constant)
+        if form_constant.is_valid():
+            form_constant.save()
+            return redirect('constant_list')
+    else:
+        constants = Constant.objects.all()
+        constants_forms = [(constant, ConstantForm(instance=constant)) for constant in constants]
+
+    return render(request, 'Accounting_button/constant_list.html', {
+        'constants_forms': constants_forms,
+        'user': request.user,
+    })
+
+@login_required
+def constant_edit(request, constant_id):
+    constant = get_object_or_404(Constant, id=constant_id)
+    if request.method == 'POST':
+        form = ConstantForm(request.POST, instance=constant)
+        if form.is_valid():
+            form.save()
+            return redirect('constant_list')
+    else:
+        form = ConstantForm(instance=constant)
+
+    return render(request, 'Accounting_button/constant_edit.html', {
+        'form': form,
+        'constant': constant,
+        'user': request.user
+    })
