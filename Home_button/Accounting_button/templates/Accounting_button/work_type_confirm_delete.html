@@ -1,0 +1,11 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Delete Work Type{% endblock %}
+{% block content %}
+<h1>Delete Work Type</h1>
+<p>Are you sure you want to delete "{{ work_type.work_name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+</form>
+<a href="{% url 'work_type_list' %}" class="btn btn-secondary">Cancel</a>
+{% endblock %}

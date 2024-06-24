@@ -34,3 +34,12 @@ class ClientAdmin(admin.ModelAdmin):
     list_display = ('name', 'org_form', 'inn', 'contract_price', 'tax_system', 'contract_details', 'contact_person', 'phone', 'email', 'postal_address', 'comments')
 
 admin.site.register(Client, ClientAdmin)
+
+from django.contrib import admin
+from .models import WorkType
+
+@admin.register(WorkType)
+class WorkTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'time_norm', 'quantity', 'price_category', 'comments')
+    list_filter = ('price_category',)
+    search_fields = ('name', 'comments')
