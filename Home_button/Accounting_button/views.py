@@ -160,3 +160,36 @@ def constant_edit(request, constant_id):
     else:
         form = ConstantForm(instance=constant)
     return render(request, 'Accounting_button/constant_edit.html', {'form': form, 'constant': constant})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from .models import WorkType
+from .forms import WorkTypeForm
+
+class WorkTypeListView(ListView):
+    model = WorkType
+    template_name = 'worktype_list.html'
+
+
+class WorkTypeDeleteView(DeleteView):
+    model = WorkType
+    template_name = 'worktype_confirm_delete.html'
+    success_url = reverse_lazy('worktype_list')
+
+from django.views.generic import CreateView, UpdateView
+from .models import WorkType
+from .forms import WorkTypeForm
+
+
+class WorkTypeCreateView(CreateView):
+    model = WorkType
+    form_class = WorkTypeForm
+    template_name = 'Accounting_button/worktype_form.html'
+    success_url = reverse_lazy('worktype_list')
+
+class WorkTypeUpdateView(UpdateView):
+    model = WorkType
+    form_class = WorkTypeForm
+    template_name = 'Accounting_button/worktype_form.html'
+    success_url = reverse_lazy('worktype_list')

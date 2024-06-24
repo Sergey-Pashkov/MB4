@@ -1,0 +1,15 @@
+{% extends "Accounting_button/base.html" %}
+
+{% block content %}
+  <h2>Work Types</h2>
+  <a href="{% url 'worktype_create' %}">Add New Work Type</a>
+  <ul>
+    {% for worktype in object_list %}
+      <li>
+        {{ worktype.name }} - {{ worktype.time_norm }} - {{ worktype.quantity }} - {{ worktype.price_category }} - {{ worktype.comments }}
+        <a href="{% url 'worktype_update' worktype.pk %}">Edit</a>
+        <a href="{% url 'worktype_delete' worktype.pk %}">Delete</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
