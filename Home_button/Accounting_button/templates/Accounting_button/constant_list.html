@@ -3,9 +3,11 @@
 {% block title %}Constant List{% endblock %}
 {% block content %}
 <h1>Constant List</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
 <table class="table">
     <thead>
         <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Value</th>
             <th>Comment</th>
@@ -15,6 +17,7 @@
     <tbody>
         {% for constant in constants %}
         <tr>
+            <td>{{ constant.id }}</td>
             <td>{{ constant.name }}</td>
             <td>{{ constant.value }}</td>
             <td>{{ constant.comment }}</td>
