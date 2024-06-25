@@ -4,6 +4,7 @@
 
 {% block content %}
 <h1>{{ form.instance.pk|yesno:"Edit Unusual Operation Log,Create Unusual Operation Log" }}</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

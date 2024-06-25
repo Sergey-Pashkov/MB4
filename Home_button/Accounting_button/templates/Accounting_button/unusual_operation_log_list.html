@@ -3,6 +3,7 @@
 {% block title %}Unusual Operation Log List{% endblock %}
 {% block content %}
 <h1>Unusual Operation Log List</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
 <a href="{% url 'create_unusual_operation_log' %}" class="btn btn-primary mb-3">Add New Log</a>
 <table class="table">
     <thead>
