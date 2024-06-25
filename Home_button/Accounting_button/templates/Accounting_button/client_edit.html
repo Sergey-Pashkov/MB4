@@ -1,13 +1,13 @@
+<!-- templates/Accounting_button/client_edit.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Edit Client{% endblock %}
 {% block content %}
-<h1>Edit Client: {{ client.name }}</h1>
-
+<h1>Edit Client</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
-
-<p><a href="{% url 'client_list' %}">Back to Client List</a></p>
+<a href="{% url 'client_list' %}" class="btn btn-secondary mt-3">Back to List</a>
 {% endblock %}

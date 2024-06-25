@@ -3,6 +3,7 @@
 {% block title %}Client List{% endblock %}
 {% block content %}
 <h1>Client List</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
 <a href="{% url 'client_create' %}" class="btn btn-primary mb-3">Add Client</a>
 <table class="table">
     <thead>
