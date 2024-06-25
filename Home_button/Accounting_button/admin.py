@@ -1,7 +1,11 @@
+"""""
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser, Report, Constant
-
+from django.contrib import admin
+from .models import Client, WorkType, Constant, UnusualOperationLog 
+from django.contrib import admin
+from .models import Client, WorkType, Constant, UnusualOperationLog
 # Определяем админ-класс для модели CustomUser
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -44,3 +48,48 @@ class WorkTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'time_norm', 'price_category', 'comments')
     list_filter = ('price_category',)
     search_fields = ('name', 'comments')
+
+from django.contrib import admin
+from .models import Client, WorkType, Constants, UnusualOperationLog
+
+@admin.register(UnusualOperationLog)
+class UnusualOperationLogAdmin(admin.ModelAdmin):
+    list_display = ('operation_content', 'duration_minutes', 'client', 'price_category', 'operation_cost', 'timestamp')
+    list_filter = ('client', 'price_category', 'timestamp')
+    search_fields = ('operation_content', 'client__name', 'client__inn')
+
+"""
+from django.contrib import admin
+from .models import Client, WorkType, Constant, UnusualOperationLog, Report, CustomUser
+
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'inn', 'contract_price')
+    search_fields = ('name', 'inn')
+
+@admin.register(WorkType)
+class WorkTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price_category', 'time_norm', 'comments')
+    list_filter = ('price_category',)
+    search_fields = ('name', 'comments')
+
+@admin.register(Constant)
+class ConstantAdmin(admin.ModelAdmin):
+    list_display = ('name', 'value')
+    search_fields = ('name',)
+
+@admin.register(UnusualOperationLog)
+class UnusualOperationLogAdmin(admin.ModelAdmin):
+    list_display = ('operation_content', 'duration_minutes', 'client', 'price_category', 'operation_cost', 'timestamp')
+    list_filter = ('client', 'price_category', 'timestamp')
+    search_fields = ('operation_content', 'client__name', 'client__inn')
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    list_display = ('title', 'user', 'created_at')
+    search_fields = ('title', 'user__username')
+
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    list_display = ('username', 'email', 'user_type')
+    search_fields = ('username', 'email')

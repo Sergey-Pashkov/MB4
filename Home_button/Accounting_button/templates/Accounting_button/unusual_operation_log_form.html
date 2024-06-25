@@ -1,0 +1,54 @@
+<!-- Accounting_button/templates/Accounting_button/unusual_operation_log_form.html -->
+{% extends "Accounting_button/base.html" %}
+
+{% block title %}Create Unusual Operation Log{% endblock %}
+
+{% block content %}
+<h1>Create Unusual Operation Log</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="form-group">
+        <label for="operation_cost">Стоимость операции</label>
+        <input type="text" id="operation_cost" class="form-control" readonly>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<a href="{% url 'unusual_operation_log_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const priceCategoryField = document.querySelector('#id_price_category');
+    const durationField = document.querySelector('#id_duration_minutes');
+    const operationCostField = document.querySelector('#operation_cost');
+
+    function updateOperationCost() {
+        const priceCategory = priceCategoryField.value;
+        const duration = parseFloat(durationField.value);
+        
+        if (isNaN(duration)) {
+            operationCostField.value = 'Invalid duration';
+            return;
+        }
+
+        let costPerMinute = 0;
+
+        if (priceCategory === 'Главный бухгалтер') {
+            costPerMinute = parseFloat('{{ chief_accountant_cost }}');
+        } else if (priceCategory === 'Бухгалтер') {
+            costPerMinute = parseFloat('{{ accountant_cost }}');
+        }
+
+        if (!isNaN(costPerMinute)) {
+            operationCostField.value = (costPerMinute * duration).toFixed(2);
+        } else {
+            operationCostField.value = 'Cost not available';
+        }
+    }
+
+    priceCategoryField.addEventListener('change', updateOperationCost);
+    durationField.addEventListener('input', updateOperationCost);
+    updateOperationCost();
+});
+</script>
+{% endblock %}

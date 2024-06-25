@@ -193,3 +193,56 @@ class WorkTypeUpdateView(UpdateView):
     form_class = WorkTypeForm
     template_name = 'Accounting_button/worktype_form.html'
     success_url = reverse_lazy('worktype_list')
+
+from django.shortcuts import render, redirect
+from .forms import UnusualOperationLogForm 
+
+from django.shortcuts import render
+from .models import UnusualOperationLog
+
+def unusual_operation_log_list(request):
+    logs = UnusualOperationLog.objects.all()
+    return render(request, 'Accounting_button/unusual_operation_log_list.html', {'logs': logs})
+
+from django.shortcuts import render, redirect
+from .forms import UnusualOperationLogForm
+
+# views.py
+from django.shortcuts import render, redirect
+from .forms import UnusualOperationLogForm
+from .models import Constant
+
+def create_unusual_operation_log(request):
+    chief_accountant_cost = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+    accountant_cost = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+
+    if request.method == "POST":
+        form = UnusualOperationLogForm(request.POST)
+        if form.is_valid():
+            log = form.save(commit=False)
+            # Вычисление стоимости операции перед сохранением
+            if log.price_category == 'Главный бухгалтер':
+                cost_per_minute = chief_accountant_cost
+            elif log.price_category == 'Бухгалтер':
+                cost_per_minute = accountant_cost
+            else:
+                cost_per_minute = 0
+            log.operation_cost = cost_per_minute * log.duration_minutes
+            log.save()
+            return redirect('unusual_operation_log_list')
+    else:
+        form = UnusualOperationLogForm()
+
+    return render(request, 'Accounting_button/unusual_operation_log_form.html', {
+        'form': form,
+        'chief_accountant_cost': chief_accountant_cost,
+        'accountant_cost': accountant_cost,
+    })
+
+
+from django.shortcuts import render
+from .models import UnusualOperationLog
+
+def unusual_operation_log_list(request):
+    logs = UnusualOperationLog.objects.all()
+    return render(request, 'Accounting_button/unusual_operation_log_list.html', {'logs': logs})

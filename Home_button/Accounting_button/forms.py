@@ -59,3 +59,16 @@ class WorkTypeForm(forms.ModelForm):
     class Meta:
         model = WorkType
         fields = ['name', 'time_norm', 'price_category', 'comments']
+
+from django import forms
+from .models import UnusualOperationLog, Client, WorkType
+
+# forms.py
+from django import forms
+from .models import UnusualOperationLog
+
+
+class UnusualOperationLogForm(forms.ModelForm):
+    class Meta:
+        model = UnusualOperationLog
+        fields = ['operation_content', 'duration_minutes', 'client', 'price_category']

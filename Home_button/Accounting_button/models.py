@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class CustomUser(AbstractUser):
     USER_TYPES = (
@@ -18,22 +19,17 @@ class Report(models.Model):
     def __str__(self):
         return self.title
 
-from django.db import models
-
-# Модель для справочника констант
 class Constant(models.Model):
-    name = models.CharField(max_length=150, unique=True)  # Наименование
-    value = models.DecimalField(max_digits=10, decimal_places=2)  # Значение
-    comment = models.TextField(blank=True)  # Комментарий
+    name = models.CharField(max_length=150, unique=True)
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+    comment = models.TextField(blank=True)
 
     def __str__(self):
         return self.name
 
-    # Переопределяем метод save для вычисления значения для определенной константы
     def save(self, *args, **kwargs):
         if self.name == "Накладные расходы на 1 час фонда рабочего времени (руб.)":
             try:
-                # Получаем необходимые константы для вычисления
                 monthly_work_hours = Constant.objects.get(name="Месячный фонд рабочего времени (час.)")
                 monthly_overheads = Constant.objects.get(name="Накладные расходы за месяц (руб.)")
                 self.value = monthly_overheads.value / monthly_work_hours.value
@@ -41,10 +37,6 @@ class Constant(models.Model):
                 self.value = 0
         super().save(*args, **kwargs)
 
-# Create your models here.
-from django.db import models
-
-# models.py
 class Client(models.Model):
     name = models.CharField(max_length=255, verbose_name="Наименование", blank=False, null=False)
     org_form = models.CharField(max_length=255, verbose_name="Организационная форма", blank=True, null=True)
@@ -60,9 +52,6 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
-
-from django.db import models
-
 
 class WorkType(models.Model):
     CHIEF_ACCOUNTANT = 'Главный бухгалтер'
@@ -83,3 +72,40 @@ class WorkType(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class UnusualOperationLog(models.Model):
+    CHIEF_ACCOUNTANT = 'Главный бухгалтер'
+    ACCOUNTANT = 'Бухгалтер'
+    PRICE_CATEGORY_CHOICES = [
+        (CHIEF_ACCOUNTANT, 'Главный бухгалтер'),
+        (ACCOUNTANT, 'Бухгалтер'),
+    ]
+
+    operation_content = models.TextField(verbose_name="Содержание операции")
+    duration_minutes = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(600)],
+        verbose_name="Продолжительность минут"
+    )
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Клиент")
+    price_category = models.CharField(
+        max_length=20,
+        choices=PRICE_CATEGORY_CHOICES,
+        verbose_name="Ценовая категория"
+    )
+    operation_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Стоимость операции")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время записи")
+
+    def save(self, *args, **kwargs):
+        if self.price_category == self.CHIEF_ACCOUNTANT:
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+        elif self.price_category == self.ACCOUNTANT:
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+        else:
+            cost_per_minute = 0
+
+        self.operation_cost = cost_per_minute * self.duration_minutes
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.operation_content} - {self.client} at {self.timestamp}'
