@@ -1,3 +1,4 @@
+'''''
 from django.urls import path
 from . import views
 from .views import WorkTypeListView, WorkTypeCreateView, WorkTypeUpdateView, WorkTypeDeleteView, create_unusual_operation_log, unusual_operation_log_list
@@ -26,4 +27,38 @@ urlpatterns = [
 
     path('unusual_operation_log/create/', create_unusual_operation_log, name='create_unusual_operation_log'),
     path('unusual_operation_logs/', unusual_operation_log_list, name='unusual_operation_log_list'),  # Новый маршрут для списка
+]
+'''
+# urls.py
+from django.urls import path
+from . import views
+from .views import WorkTypeListView, WorkTypeCreateView, WorkTypeUpdateView, WorkTypeDeleteView, create_unusual_operation_log, unusual_operation_log_list, unusual_operation_log_update, unusual_operation_log_delete
+
+urlpatterns = [
+    path('', views.dashboard, name='dashboard'),
+    path('clients/create/', views.client_create, name='client_create'),
+    path('clients/delete/<int:client_id>/', views.client_delete, name='client_delete'),
+    path('accountant/', views.accountant_dashboard, name='accountant_dashboard'),
+    path('director/', views.director_dashboard, name='director_dashboard'),
+    path('owner/', views.owner_dashboard, name='owner_dashboard'),
+    path('clients/', views.client_list, name='client_list'),
+    path('clients/edit/<int:client_id>/', views.client_edit, name='client_edit'),
+    path('users/', views.user_list, name='user_list'),
+    path('users/add/', views.user_add, name='user_add'),
+    path('users/edit/<int:user_id>/', views.user_edit, name='user_edit'),
+    path('users/delete/<int:user_id>/', views.user_delete, name='user_delete'),
+    path('constants/', views.constant_list, name='constant_list'),
+    path('constants/edit/<int:constant_id>/', views.constant_edit, name='constant_edit'),
+
+    # Пути для работы с видами работ
+    path('worktypes/', WorkTypeListView.as_view(), name='worktype_list'),
+    path('worktypes/create/', WorkTypeCreateView.as_view(), name='worktype_create'),
+    path('worktypes/update/<int:pk>/', WorkTypeUpdateView.as_view(), name='worktype_update'),
+    path('worktypes/delete/<int:pk>/', WorkTypeDeleteView.as_view(), name='worktype_delete'),
+
+    # Пути для работы с журналом нестандартных операций
+    path('unusual_operation_logs/', unusual_operation_log_list, name='unusual_operation_log_list'),
+    path('unusual_operation_logs/create/', create_unusual_operation_log, name='create_unusual_operation_log'),
+    path('unusual_operation_logs/update/<int:pk>/', unusual_operation_log_update, name='unusual_operation_log_update'),
+    path('unusual_operation_logs/delete/<int:pk>/', unusual_operation_log_delete, name='unusual_operation_log_delete'),
 ]
