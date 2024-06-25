@@ -1,4 +1,4 @@
-<!-- templates/Accounting_button/owner_dashboard.html -->
+
 {% extends "Accounting_button/base.html" %}
 {% block title %}Owner Dashboard{% endblock %}
 {% block content %}
@@ -9,5 +9,6 @@
 <a href="{% url 'constant_list' %}" class="btn btn-primary">View Constants</a>
 <a href="{% url 'client_list' %}" class="btn btn-primary">View Clients</a>
 <a href="{% url 'user_list' %}" class="btn btn-primary">View Users</a>
+<a href="{% url 'worktype_list' %}" class="btn btn-primary">View Work Types</a>
 
 {% endblock %}
