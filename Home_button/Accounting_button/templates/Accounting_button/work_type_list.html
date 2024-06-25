@@ -1,30 +1,32 @@
-<!-- templates/Accounting_button/work_type_list.html -->
+<!-- templates/Accounting_button/worktype_list.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Work Type List{% endblock %}
 {% block content %}
 <h1>Work Type List</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
+<a href="{% url 'worktype_create' %}" class="btn btn-primary mb-3">Add Work Type</a>
 <table class="table">
     <thead>
         <tr>
-            <th>Number</th>
-            <th>Work Name</th>
+            <th>#</th>
+            <th>Name</th>
             <th>Time Norm</th>
-            <th>Quantity</th>
             <th>Price Category</th>
+            <th>Comments</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-        {% for work_type in work_types %}
+        {% for worktype in object_list %}
         <tr>
-            <td>{{ work_type.number }}</td>
-            <td>{{ work_type.work_name }}</td>
-            <td>{{ work_type.time_norm }}</td>
-            <td>{{ work_type.quantity }}</td>
-            <td>{{ work_type.price_category }}</td>
+            <td>{{ worktype.id }}</td>
+            <td>{{ worktype.name }}</td>
+            <td>{{ worktype.time_norm }}</td>
+            <td>{{ worktype.price_category }}</td>
+            <td>{{ worktype.comments }}</td>
             <td>
-                <a href="{% url 'work_type_edit' work_type.id %}" class="btn btn-warning btn-sm">Edit</a>
-                <form method="post" action="{% url 'work_type_delete' work_type.id %}" style="display:inline;">
+                <a href="{% url 'worktype_update' worktype.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <form method="post" action="{% url 'worktype_delete' worktype.id %}" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>

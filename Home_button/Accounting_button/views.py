@@ -188,11 +188,17 @@ class WorkTypeCreateView(CreateView):
     template_name = 'Accounting_button/worktype_form.html'
     success_url = reverse_lazy('worktype_list')
 
+
 class WorkTypeUpdateView(UpdateView):
     model = WorkType
     form_class = WorkTypeForm
     template_name = 'Accounting_button/worktype_form.html'
     success_url = reverse_lazy('worktype_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user  # Добавляем пользователя в контекст
+        return context
 
 # views.py
 from django.shortcuts import render, get_object_or_404, redirect

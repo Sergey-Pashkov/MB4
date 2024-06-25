@@ -1,7 +1,9 @@
+<!-- templates/Accounting_button/worktype_list.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Work Type List{% endblock %}
 {% block content %}
 <h1>Work Type List</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
 <a href="{% url 'worktype_create' %}" class="btn btn-primary mb-3">Add Work Type</a>
 <table class="table">
     <thead>
@@ -23,8 +25,8 @@
             <td>{{ worktype.price_category }}</td>
             <td>{{ worktype.comments }}</td>
             <td>
-                <a href="{% url 'worktype_update' worktype.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                <form method="post" action="{% url 'worktype_delete' worktype.pk %}" style="display:inline;">
+                <a href="{% url 'worktype_update' worktype.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <form method="post" action="{% url 'worktype_delete' worktype.id %}" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                 </form>
