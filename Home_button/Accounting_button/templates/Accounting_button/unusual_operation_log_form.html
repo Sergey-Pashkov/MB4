@@ -1,16 +1,15 @@
-<!-- Accounting_button/templates/Accounting_button/unusual_operation_log_form.html -->
+<!-- templates/Accounting_button/unusual_operation_log_form.html -->
 {% extends "Accounting_button/base.html" %}
-
-{% block title %}Create Unusual Operation Log{% endblock %}
+{% block title %}{{ form.instance.pk|yesno:"Edit Unusual Operation Log,Create Unusual Operation Log" }}{% endblock %}
 
 {% block content %}
-<h1>Create Unusual Operation Log</h1>
+<h1>{{ form.instance.pk|yesno:"Edit Unusual Operation Log,Create Unusual Operation Log" }}</h1>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <div class="form-group">
         <label for="operation_cost">Стоимость операции</label>
-        <input type="text" id="operation_cost" class="form-control" readonly>
+        <input type="text" id="operation_cost" class="form-control" readonly value="{{ form.instance.operation_cost }}">
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>

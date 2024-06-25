@@ -234,26 +234,6 @@ def create_unusual_operation_log(request):
     })
 
 @login_required
-def unusual_operation_log_update(request, pk):
-    log = get_object_or_404(UnusualOperationLog, pk=pk)
-    if request.method == 'POST':
-        form = UnusualOperationLogForm(request.POST, instance=log)
-        if form.is_valid():
-            log = form.save(commit=False)
-            if log.price_category == 'Главный бухгалтер':
-                cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
-            elif log.price_category == 'Бухгалтер':
-                cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
-            else:
-                cost_per_minute = 0
-            log.operation_cost = cost_per_minute * log.duration_minutes
-            log.save()
-            return redirect('unusual_operation_log_list')
-    else:
-        form = UnusualOperationLogForm(instance=log)
-    return render(request, 'Accounting_button/unusual_operation_log_form.html', {'form': form})
-
-@login_required
 def unusual_operation_log_delete(request, pk):
     log = get_object_or_404(UnusualOperationLog, pk=pk)
     if request.method == 'POST':
@@ -261,6 +241,38 @@ def unusual_operation_log_delete(request, pk):
         return redirect('unusual_operation_log_list')
     return render(request, 'Accounting_button/unusual_operation_log_confirm_delete.html', {'log': log})
 
+# views.py
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import UnusualOperationLog, Constant
+from .forms import UnusualOperationLogForm
+
+@login_required
+def unusual_operation_log_update(request, pk):
+    log = get_object_or_404(UnusualOperationLog, pk=pk)
+    chief_accountant_cost = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+    accountant_cost = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+
+    if request.method == 'POST':
+        form = UnusualOperationLogForm(request.POST, instance=log)
+        if form.is_valid():
+            log = form.save(commit=False)
+            if log.price_category == 'Главный бухгалтер':
+                cost_per_minute = chief_accountant_cost
+            elif log.price_category == 'Бухгалтер':
+                cost_per_minute = accountant_cost
+            else:
+                cost_per_minute = 0
+            log.operation_cost = cost_per_minute * log.duration_minutes
+            log.save()
+            return redirect('unusual_operation_log_list')
+    else:
+        form = UnusualOperationLogForm(instance=log)
+    return render(request, 'Accounting_button/unusual_operation_log_form.html', {
+        'form': form,
+        'chief_accountant_cost': chief_accountant_cost,
+        'accountant_cost': accountant_cost,
+    })
 
 
 
