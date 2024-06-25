@@ -1,11 +1,11 @@
 {% extends "Accounting_button/base.html" %}
-
+{% block title %}{% if view.object %}Edit Work Type{% else %}Add New Work Type{% endif %}{% endblock %}
 {% block content %}
-  <h2>{% if view.object %}Edit Work Type{% else %}Add New Work Type{% endif %}</h2>
-  <form method="post">
+<h1>{% if view.object %}Edit Work Type{% else %}Add New Work Type{% endif %}</h1>
+<form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Save</button>
-  </form>
-  <a href="{% url 'worktype_list' %}">Back to List</a>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<a href="{% url 'worktype_list' %}" class="btn btn-secondary mt-3">Back to List</a>
 {% endblock %}

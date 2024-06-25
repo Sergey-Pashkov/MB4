@@ -54,7 +54,8 @@ class ConstantForm(forms.ModelForm):
 from django import forms
 from .models import WorkType
 
+
 class WorkTypeForm(forms.ModelForm):
     class Meta:
         model = WorkType
-        fields = ['name', 'time_norm', 'quantity', 'price_category', 'comments']
+        fields = ['name', 'time_norm', 'price_category', 'comments']

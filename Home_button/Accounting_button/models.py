@@ -63,6 +63,7 @@ class Client(models.Model):
 
 from django.db import models
 
+
 class WorkType(models.Model):
     CHIEF_ACCOUNTANT = 'Главный бухгалтер'
     ACCOUNTANT = 'Бухгалтер'
@@ -73,7 +74,6 @@ class WorkType(models.Model):
 
     name = models.CharField(max_length=255, default="Название работы")
     time_norm = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
-    quantity = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
     price_category = models.CharField(
         max_length=20,
         choices=PRICE_CATEGORY_CHOICES,
