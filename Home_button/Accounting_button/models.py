@@ -73,6 +73,12 @@ class WorkType(models.Model):
     def __str__(self):
         return self.name
 
+# models.py
+from django.contrib.auth.models import User
+
+
+# models.py
+from django.conf import settings
 
 class UnusualOperationLog(models.Model):
     CHIEF_ACCOUNTANT = 'Главный бухгалтер'
@@ -95,6 +101,7 @@ class UnusualOperationLog(models.Model):
     )
     operation_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Стоимость операции")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время записи")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")  # Обновлено
 
     def save(self, *args, **kwargs):
         if self.price_category == self.CHIEF_ACCOUNTANT:

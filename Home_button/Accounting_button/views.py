@@ -204,14 +204,14 @@ def unusual_operation_log_list(request):
     logs = UnusualOperationLog.objects.all()
     return render(request, 'Accounting_button/unusual_operation_log_list.html', {'logs': logs})
 
-from django.shortcuts import render, redirect
-from .forms import UnusualOperationLogForm
 
 # views.py
 from django.shortcuts import render, redirect
 from .forms import UnusualOperationLogForm
-from .models import Constant
+from .models import Constant, UnusualOperationLog
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def create_unusual_operation_log(request):
     chief_accountant_cost = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
     accountant_cost = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
@@ -220,6 +220,8 @@ def create_unusual_operation_log(request):
         form = UnusualOperationLogForm(request.POST)
         if form.is_valid():
             log = form.save(commit=False)
+            # Устанавливаем автора записи
+            log.author = request.user
             # Вычисление стоимости операции перед сохранением
             if log.price_category == 'Главный бухгалтер':
                 cost_per_minute = chief_accountant_cost
@@ -238,11 +240,3 @@ def create_unusual_operation_log(request):
         'chief_accountant_cost': chief_accountant_cost,
         'accountant_cost': accountant_cost,
     })
-
-
-from django.shortcuts import render
-from .models import UnusualOperationLog
-
-def unusual_operation_log_list(request):
-    logs = UnusualOperationLog.objects.all()
-    return render(request, 'Accounting_button/unusual_operation_log_list.html', {'logs': logs})

@@ -3,15 +3,17 @@
 {% block title %}Unusual Operation Logs{% endblock %}
 {% block content %}
 <h1>Unusual Operation Logs</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
 <table class="table">
     <thead>
         <tr>
             <th>ID</th>
             <th>Operation Content</th>
             <th>Duration Minutes</th>
+            <th>Operation Cost</th>
             <th>Client</th>
             <th>Price Category</th>
-            <th>Operation Cost</th>
+            <th>Author</th>
             <th>Timestamp</th>
         </tr>
     </thead>
@@ -21,9 +23,10 @@
             <td>{{ log.id }}</td>
             <td>{{ log.operation_content }}</td>
             <td>{{ log.duration_minutes }}</td>
+            <td>{{ log.operation_cost }}</td>
             <td>{{ log.client }}</td>
             <td>{{ log.price_category }}</td>
-            <td>{{ log.operation_cost }}</td>
+            <td>{{ log.author }}</td>
             <td>{{ log.timestamp }}</td>
         </tr>
         {% endfor %}
