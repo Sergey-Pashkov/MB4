@@ -174,7 +174,7 @@ class WorkTypeListView(ListView):
 
 class WorkTypeDeleteView(DeleteView):
     model = WorkType
-    template_name = 'worktype_confirm_delete.html'
+    template_name = 'Accounting_button/worktype_confirm_delete.html'
     success_url = reverse_lazy('worktype_list')
 
 from django.views.generic import CreateView, UpdateView
