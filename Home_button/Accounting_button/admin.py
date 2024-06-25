@@ -78,12 +78,6 @@ class ConstantAdmin(admin.ModelAdmin):
     list_display = ('name', 'value')
     search_fields = ('name',)
 
-@admin.register(UnusualOperationLog)
-class UnusualOperationLogAdmin(admin.ModelAdmin):
-    list_display = ('operation_content', 'duration_minutes', 'client', 'price_category', 'operation_cost', 'timestamp')
-    list_filter = ('client', 'price_category', 'timestamp')
-    search_fields = ('operation_content', 'client__name', 'client__inn')
-
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
     list_display = ('title', 'user', 'created_at')
@@ -93,3 +87,11 @@ class ReportAdmin(admin.ModelAdmin):
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'user_type')
     search_fields = ('username', 'email')
+
+from django.contrib import admin
+from .models import UnusualOperationLog
+
+class UnusualOperationLogAdmin(admin.ModelAdmin):
+    list_display = ('operation_content', 'duration_minutes', 'operation_cost', 'client', 'price_category', 'author', 'timestamp')
+
+admin.site.register(UnusualOperationLog, UnusualOperationLogAdmin)
