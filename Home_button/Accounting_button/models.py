@@ -163,3 +163,33 @@ class StandardOperationLog(models.Model):
     def __str__(self):
         return f'{self.client} - {self.worktype} - {self.timestamp}'
 
+from django.db import models
+from django.conf import settings
+
+class DeviationLog(models.Model):
+    REQUIREMENTS = 'T'
+    EQUIPMENT = 'O'
+    RAW_MATERIAL = 'S'
+    QUALIFICATION = 'K'
+    REASON_CHOICES = [
+        (REQUIREMENTS, 'Т – требования'),
+        (EQUIPMENT, 'О – оборудование'),
+        (RAW_MATERIAL, 'С – сырье'),
+        (QUALIFICATION, 'К – квалификация'),
+    ]
+
+    operation_content = models.TextField(verbose_name="Содержание записи", default="")
+    reason = models.CharField(max_length=1, choices=REASON_CHOICES, verbose_name="Причина", default=REQUIREMENTS)
+    client = models.ForeignKey('Client', on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Клиент")
+    inn = models.CharField(max_length=12, verbose_name="ИНН", blank=True, null=True)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор", editable=False)
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время записи")
+    comments = models.TextField(verbose_name="Комментарии", blank=True, default="")
+
+    def save(self, *args, **kwargs):
+        if self.client:
+            self.inn = self.client.inn
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.operation_content} - {self.get_reason_display()} - {self.timestamp}'
