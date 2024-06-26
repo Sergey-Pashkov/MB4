@@ -80,6 +80,10 @@ from django.contrib.auth.models import User
 # models.py
 from django.conf import settings
 
+from django.conf import settings
+from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 class UnusualOperationLog(models.Model):
     CHIEF_ACCOUNTANT = 'Главный бухгалтер'
     ACCOUNTANT = 'Бухгалтер'
@@ -94,6 +98,7 @@ class UnusualOperationLog(models.Model):
         verbose_name="Продолжительность минут"
     )
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Клиент")
+    inn = models.CharField(max_length=12, verbose_name="ИНН", editable=False)  # Новое поле
     price_category = models.CharField(
         max_length=20,
         choices=PRICE_CATEGORY_CHOICES,
@@ -101,7 +106,7 @@ class UnusualOperationLog(models.Model):
     )
     operation_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Стоимость операции")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время записи")
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")  # Обновлено
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")
 
     def save(self, *args, **kwargs):
         if self.price_category == self.CHIEF_ACCOUNTANT:
@@ -112,6 +117,10 @@ class UnusualOperationLog(models.Model):
             cost_per_minute = 0
 
         self.operation_cost = cost_per_minute * self.duration_minutes
+
+        # Автоматически заполняем поле inn из модели Client
+        self.inn = self.client.inn
+
         super().save(*args, **kwargs)
 
     def __str__(self):

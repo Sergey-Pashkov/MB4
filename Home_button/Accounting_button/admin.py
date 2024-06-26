@@ -61,7 +61,8 @@ class UnusualOperationLogAdmin(admin.ModelAdmin):
 """
 from django.contrib import admin
 from .models import Client, WorkType, Constant, UnusualOperationLog, Report, CustomUser
-
+from django.contrib import admin
+from .models import UnusualOperationLog, StandardOperationLog 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
     list_display = ('name', 'inn', 'contract_price')
@@ -91,14 +92,21 @@ class CustomUserAdmin(admin.ModelAdmin):
 from django.contrib import admin
 from .models import UnusualOperationLog
 
-class UnusualOperationLogAdmin(admin.ModelAdmin):
-    list_display = ('operation_content', 'duration_minutes', 'operation_cost', 'client', 'price_category', 'author', 'timestamp')
-
-admin.site.register(UnusualOperationLog, UnusualOperationLogAdmin)
-
 
 from django.contrib import admin
-from .models import StandardOperationLog
+from .models import UnusualOperationLog, StandardOperationLog
+
+class UnusualOperationLogAdmin(admin.ModelAdmin):
+    list_display = ('operation_content', 'duration_minutes', 'client', 'inn', 'price_category', 'operation_cost', 'timestamp', 'author')
+    readonly_fields = ('operation_cost', 'timestamp', 'author', 'inn')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.author_id:
+            obj.author = request.user
+        obj.inn = obj.client.inn  # Автоматически заполняем поле ИНН из модели Client
+        super().save_model(request, obj, form, change)
+
+admin.site.register(UnusualOperationLog, UnusualOperationLogAdmin)
 
 class StandardOperationLogAdmin(admin.ModelAdmin):
     list_display = ('client', 'inn', 'worktype', 'time_norm', 'price_category', 'cost_per_minute', 'operation_cost', 'author', 'timestamp')
