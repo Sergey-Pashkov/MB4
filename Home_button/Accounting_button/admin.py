@@ -122,13 +122,13 @@ admin.site.register(StandardOperationLog, StandardOperationLogAdmin)
 from django.contrib import admin
 from .models import DeviationLog
 
+
 class DeviationLogAdmin(admin.ModelAdmin):
-    list_display = ('operation_content', 'reason', 'client', 'inn', 'author', 'timestamp', 'comments')
-    list_filter = ('reason', 'client', 'timestamp')
-    search_fields = ('operation_content', 'comments', 'client__name', 'inn', 'author__username')
+    list_display = ('content', 'reason', 'client', 'inn', 'author', 'timestamp')
+    readonly_fields = ('author',)
 
     def save_model(self, request, obj, form, change):
-        if not obj.author_id:
+        if not obj.author:
             obj.author = request.user
         super().save_model(request, obj, form, change)
 

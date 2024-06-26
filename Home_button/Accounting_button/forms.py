@@ -80,3 +80,11 @@ class StandardOperationLogForm(forms.ModelForm):
     class Meta:
         model = StandardOperationLog
         fields = ['client', 'worktype']
+
+from django import forms
+from .models import DeviationLog
+
+class DeviationLogForm(forms.ModelForm):
+    class Meta:
+        model = DeviationLog
+        fields = ['content', 'reason', 'client', 'comments']

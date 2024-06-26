@@ -1,0 +1,13 @@
+<!-- templates/Accounting_button/deviation_log_form.html -->
+{% extends "Accounting_button/base.html" %}
+{% block title %}{{ form.instance.pk|yesno:"Edit Deviation Log,Create Deviation Log" }}{% endblock %}
+{% block content %}
+<h1>{{ form.instance.pk|yesno:"Edit Deviation Log,Create Deviation Log" }}</h1>
+<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<a href="{% url 'deviation_log_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+{% endblock %}
