@@ -281,6 +281,42 @@ def unusual_operation_log_update(request, pk):
     })
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from .models import StandardOperationLog
+from .forms import StandardOperationLogForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+@method_decorator(login_required, name='dispatch')
+class StandardOperationLogListView(ListView):
+    model = StandardOperationLog
+    template_name = 'Accounting_button/standard_operation_log_list.html'
+
+@method_decorator(login_required, name='dispatch')
+class StandardOperationLogCreateView(CreateView):
+    model = StandardOperationLog
+    form_class = StandardOperationLogForm
+    template_name = 'Accounting_button/standard_operation_log_form.html'
+    success_url = reverse_lazy('standard_operation_log_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class StandardOperationLogUpdateView(UpdateView):
+    model = StandardOperationLog
+    form_class = StandardOperationLogForm
+    template_name = 'Accounting_button/standard_operation_log_form.html'
+    success_url = reverse_lazy('standard_operation_log_list')
+
+@method_decorator(login_required, name='dispatch')
+class StandardOperationLogDeleteView(DeleteView):
+    model = StandardOperationLog
+    template_name = 'Accounting_button/standard_operation_log_confirm_delete.html'
+    success_url = reverse_lazy('standard_operation_log_list')
 
 
 

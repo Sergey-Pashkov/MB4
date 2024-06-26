@@ -72,3 +72,11 @@ class UnusualOperationLogForm(forms.ModelForm):
     class Meta:
         model = UnusualOperationLog
         fields = ['operation_content', 'duration_minutes', 'client', 'price_category']
+
+
+from .models import StandardOperationLog
+
+class StandardOperationLogForm(forms.ModelForm):
+    class Meta:
+        model = StandardOperationLog
+        fields = ['client', 'worktype']

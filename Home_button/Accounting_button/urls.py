@@ -34,6 +34,15 @@ from django.urls import path
 from . import views
 from .views import WorkTypeListView, WorkTypeCreateView, WorkTypeUpdateView, WorkTypeDeleteView, create_unusual_operation_log, unusual_operation_log_list, unusual_operation_log_update, unusual_operation_log_delete
 
+from .views import (
+    StandardOperationLogListView,
+    StandardOperationLogCreateView,
+    StandardOperationLogUpdateView,
+    StandardOperationLogDeleteView
+)
+
+
+
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
     path('clients/create/', views.client_create, name='client_create'),
@@ -61,4 +70,10 @@ urlpatterns = [
     path('unusual_operation_logs/create/', create_unusual_operation_log, name='create_unusual_operation_log'),
     path('unusual_operation_logs/update/<int:pk>/', unusual_operation_log_update, name='unusual_operation_log_update'),
     path('unusual_operation_logs/delete/<int:pk>/', unusual_operation_log_delete, name='unusual_operation_log_delete'),
+
+    # другие маршруты...
+    path('standard_operation_logs/', StandardOperationLogListView.as_view(), name='standard_operation_log_list'),
+    path('standard_operation_logs/create/', StandardOperationLogCreateView.as_view(), name='standard_operation_log_create'),
+    path('standard_operation_logs/update/<int:pk>/', StandardOperationLogUpdateView.as_view(), name='standard_operation_log_update'),
+    path('standard_operation_logs/delete/<int:pk>/', StandardOperationLogDeleteView.as_view(), name='standard_operation_log_delete'),
 ]
