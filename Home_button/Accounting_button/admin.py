@@ -100,14 +100,13 @@ admin.site.register(UnusualOperationLog, UnusualOperationLogAdmin)
 from django.contrib import admin
 from .models import StandardOperationLog
 
-@admin.register(StandardOperationLog)
 class StandardOperationLogAdmin(admin.ModelAdmin):
-    list_display = ('client', 'worktype', 'time_norm', 'price_category', 'cost_per_minute', 'operation_cost', 'author', 'timestamp')
-    list_filter = ('client', 'worktype', 'price_category', 'author')
-    search_fields = ('client__name', 'worktype__name', 'author__username')
-    readonly_fields = ('time_norm', 'price_category', 'cost_per_minute', 'operation_cost', 'author')
+    list_display = ('client', 'inn', 'worktype', 'time_norm', 'price_category', 'cost_per_minute', 'operation_cost', 'author', 'timestamp')
+    readonly_fields = ('time_norm', 'price_category', 'cost_per_minute', 'operation_cost', 'author', 'timestamp', 'inn')
 
     def save_model(self, request, obj, form, change):
-        if not obj.pk:
+        if not obj.pk:  # Only set the author during the first save.
             obj.author = request.user
         super().save_model(request, obj, form, change)
+
+admin.site.register(StandardOperationLog, StandardOperationLogAdmin)

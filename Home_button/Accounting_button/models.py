@@ -130,6 +130,7 @@ class StandardOperationLog(models.Model):
     operation_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Стоимость операции", editable=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время записи")
+    inn = models.CharField(max_length=12, verbose_name="ИНН", editable=False)
 
     def save(self, *args, **kwargs):
         # Получаем значение time_norm и price_category из связанного WorkType
@@ -145,7 +146,11 @@ class StandardOperationLog(models.Model):
         # Рассчитываем стоимость операции
         self.operation_cost = self.time_norm * self.cost_per_minute
 
+        # Устанавливаем значение ИНН из модели Client
+        self.inn = self.client.inn
+
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.client} - {self.worktype} - {self.timestamp}'
+
