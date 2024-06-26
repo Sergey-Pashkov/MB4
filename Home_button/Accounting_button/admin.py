@@ -95,3 +95,19 @@ class UnusualOperationLogAdmin(admin.ModelAdmin):
     list_display = ('operation_content', 'duration_minutes', 'operation_cost', 'client', 'price_category', 'author', 'timestamp')
 
 admin.site.register(UnusualOperationLog, UnusualOperationLogAdmin)
+
+
+from django.contrib import admin
+from .models import StandardOperationLog
+
+@admin.register(StandardOperationLog)
+class StandardOperationLogAdmin(admin.ModelAdmin):
+    list_display = ('client', 'worktype', 'time_norm', 'price_category', 'cost_per_minute', 'operation_cost', 'author', 'timestamp')
+    list_filter = ('client', 'worktype', 'price_category', 'author')
+    search_fields = ('client__name', 'worktype__name', 'author__username')
+    readonly_fields = ('time_norm', 'price_category', 'cost_per_minute', 'operation_cost', 'author')
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.author = request.user
+        super().save_model(request, obj, form, change)

@@ -116,3 +116,36 @@ class UnusualOperationLog(models.Model):
 
     def __str__(self):
         return f'{self.operation_content} - {self.client} at {self.timestamp}'
+
+
+from django.db import models
+from django.conf import settings
+
+class StandardOperationLog(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Клиент")
+    worktype = models.ForeignKey(WorkType, on_delete=models.CASCADE, verbose_name="Вид работы")
+    time_norm = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Норма времени", editable=False)
+    price_category = models.CharField(max_length=20, verbose_name="Ценовая категория", editable=False)
+    cost_per_minute = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Стоимость минуты", editable=False)
+    operation_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Стоимость операции", editable=False)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время записи")
+
+    def save(self, *args, **kwargs):
+        # Получаем значение time_norm и price_category из связанного WorkType
+        self.time_norm = self.worktype.time_norm
+        self.price_category = self.worktype.price_category
+
+        # Получаем стоимость минуты
+        if self.price_category == 'Главный бухгалтер':
+            self.cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+        elif self.price_category == 'Бухгалтер':
+            self.cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+
+        # Рассчитываем стоимость операции
+        self.operation_cost = self.time_norm * self.cost_per_minute
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f'{self.client} - {self.worktype} - {self.timestamp}'
