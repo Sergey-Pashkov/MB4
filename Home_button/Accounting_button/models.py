@@ -130,6 +130,10 @@ class UnusualOperationLog(models.Model):
 from django.db import models
 from django.conf import settings
 
+
+from django.db import models
+from django.conf import settings
+
 class StandardOperationLog(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Клиент")
     worktype = models.ForeignKey(WorkType, on_delete=models.CASCADE, verbose_name="Вид работы")
@@ -140,6 +144,7 @@ class StandardOperationLog(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name="Автор")
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Дата и время записи")
     inn = models.CharField(max_length=12, verbose_name="ИНН", editable=False)
+    quantity = models.IntegerField(default=1, verbose_name="Количество")
 
     def save(self, *args, **kwargs):
         # Получаем значение time_norm и price_category из связанного WorkType
@@ -153,7 +158,7 @@ class StandardOperationLog(models.Model):
             self.cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
 
         # Рассчитываем стоимость операции
-        self.operation_cost = self.time_norm * self.cost_per_minute
+        self.operation_cost = self.time_norm * self.cost_per_minute * self.quantity
 
         # Устанавливаем значение ИНН из модели Client
         self.inn = self.client.inn
@@ -163,8 +168,6 @@ class StandardOperationLog(models.Model):
     def __str__(self):
         return f'{self.client} - {self.worktype} - {self.timestamp}'
 
-from django.db import models
-from django.conf import settings
 
 class DeviationLog(models.Model):
     REQUIREMENT = 'Т'
