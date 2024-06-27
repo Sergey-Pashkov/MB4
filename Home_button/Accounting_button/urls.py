@@ -16,6 +16,7 @@ from .views import deviation_log_list, create_deviation_log, update_deviation_lo
 from django.urls import path
 from . import views
 from .views import standard_operations_report 
+from .views import unusual_operations_report
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -58,4 +59,7 @@ urlpatterns = [
 
     # другие пути
     path('standard_operations_report/', standard_operations_report, name='standard_operations_report'),
+
+    # ... другие пути ...
+    path('unusual_operations_report/', unusual_operations_report, name='unusual_operations_report'),
 ]

@@ -429,5 +429,32 @@ def standard_operations_report(request):
 
     return render(request, 'Accounting_button/standard_operations_report.html', context)
 
+from django.shortcuts import render
+from django.utils.timezone import now
+from django.db.models import Sum
+from .models import UnusualOperationLog
+from datetime import datetime
+
+def unusual_operations_report(request):
+    today = datetime.today()
+    start_of_day = datetime.combine(today, datetime.min.time())
+    start_of_month = datetime(today.year, today.month, 1)
+
+    # Суммируем duration_minutes за текущий день и за текущий месяц
+    duration_today = UnusualOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('duration_minutes'))['duration_minutes__sum'] or 0
+    duration_month = UnusualOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('duration_minutes'))['duration_minutes__sum'] or 0
+
+    # Суммируем operation_cost за текущий день и за текущий месяц
+    operation_cost_today = UnusualOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
+    operation_cost_month = UnusualOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
+
+    context = {
+        'duration_today': duration_today,
+        'duration_month': duration_month,
+        'operation_cost_today': operation_cost_today,
+        'operation_cost_month': operation_cost_month,
+    }
+
+    return render(request, 'Accounting_button/unusual_operations_report.html', context)
 
 

@@ -131,9 +131,6 @@ from django.db import models
 from django.conf import settings
 
 
-from django.db import models
-from django.conf import settings
-
 class StandardOperationLog(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, verbose_name="Клиент")
     worktype = models.ForeignKey(WorkType, on_delete=models.CASCADE, verbose_name="Вид работы")

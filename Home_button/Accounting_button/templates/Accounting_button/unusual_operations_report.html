@@ -1,0 +1,42 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Unusual Operations Report{% endblock %}
+{% block content %}
+<h1 class="my-4">Unusual Operations Report</h1>
+<p>Welcome, {{ user.username }}!</p>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h3>Report Summary</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Time on Operations Today (minutes)</td>
+                    <td>{{ duration_today }}</td>
+                </tr>
+                <tr>
+                    <td>Time on Operations This Month (minutes)</td>
+                    <td>{{ duration_month }}</td>
+                </tr>
+                <tr>
+                    <td>Operation Cost for Today</td>
+                    <td>{{ operation_cost_today|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Operation Cost for This Month</td>
+                    <td>{{ operation_cost_month|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{% url 'owner_dashboard' %}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+{% endblock %}

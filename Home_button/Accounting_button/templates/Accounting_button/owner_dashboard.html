@@ -5,13 +5,14 @@
 <p>Welcome, {{ user.username }}!</p>
 
 <!-- Кнопки для перехода на различные страницы -->
-<a href="{% url 'constant_list' %}" class="btn btn-primary mb-3">View Constants</a>
-<a href="{% url 'client_list' %}" class="btn btn-primary mb-3">View Clients</a>
-<a href="{% url 'user_list' %}" class="btn btn-primary mb-3">View Users</a>
-<a href="{% url 'worktype_list' %}" class="btn btn-primary mb-3">View Work Types</a>
-<a href="{% url 'unusual_operation_log_list' %}" class="btn btn-primary mb-3">View Unusual Operation Logs</a>
-<a href="{% url 'standard_operation_log_list' %}" class="btn btn-primary mb-3">View Standard Operation Logs</a>
-<a href="{% url 'deviation_log_list' %}" class="btn btn-primary mb-3">View Deviation Logs</a>
-<a href="{% url 'standard_operations_report' %}" class="btn btn-primary mb-3">View Standard Operations Report</a> <!-- Новая кнопка -->
+<a href="{% url 'constant_list' %}" class="btn btn-primary mb-2">View Constants</a>
+<a href="{% url 'client_list' %}" class="btn btn-primary mb-2">View Clients</a>
+<a href="{% url 'user_list' %}" class="btn btn-primary mb-2">View Users</a>
+<a href="{% url 'worktype_list' %}" class="btn btn-primary mb-2">View Work Types</a>
+<a href="{% url 'unusual_operation_log_list' %}" class="btn btn-primary mb-2">View Unusual Operation Logs</a>
+<a href="{% url 'standard_operation_log_list' %}" class="btn btn-primary mb-2">View Standard Operation Logs</a>
+<a href="{% url 'deviation_log_list' %}" class="btn btn-primary mb-2">View Deviation Logs</a>
+<a href="{% url 'standard_operations_report' %}" class="btn btn-primary mb-2">Standard Operations Report</a> <!-- Новая кнопка для отчета по стандартным операциям -->
+<a href="{% url 'unusual_operations_report' %}" class="btn btn-primary mb-2">Unusual Operations Report</a> <!-- Новая кнопка для отчета по нестандартным операциям -->
 
 {% endblock %}
