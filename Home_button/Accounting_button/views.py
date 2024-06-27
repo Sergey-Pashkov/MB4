@@ -3,7 +3,10 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import CustomUser, Constant, Client
 from .forms import CustomUserCreationForm, ConstantForm, ClientForm
 from django.contrib.auth.decorators import login_required
-
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import StandardOperationLog
+from datetime import datetime, timedelta
 # Проверка типа пользователя и перенаправление на соответствующий дашборд
 @login_required
 def dashboard(request):
@@ -393,18 +396,29 @@ from django.db.models import Sum
 from .models import StandardOperationLog
 from datetime import datetime, timedelta
 
+
 def standard_operations_report(request):
     today = datetime.today()
     start_of_day = datetime.combine(today, datetime.min.time())
     start_of_month = datetime(today.year, today.month, 1)
 
-    # Суммируем time_norm за текущий день и за текущий месяц
-    time_norm_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
-    time_norm_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
+    # Суммируем произведение time_norm и quantity за текущий день и за текущий месяц
+    time_norm_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(
+        total_time_norm=Sum(F('time_norm') * F('quantity'))
+    )['total_time_norm'] or 0
+
+    time_norm_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(
+        total_time_norm=Sum(F('time_norm') * F('quantity'))
+    )['total_time_norm'] or 0
 
     # Суммируем operation_cost за текущий день и за текущий месяц
-    operation_cost_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
-    operation_cost_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
+    operation_cost_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
+
+    operation_cost_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
 
     context = {
         'time_norm_today': time_norm_today,

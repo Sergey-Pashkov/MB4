@@ -1,35 +1,42 @@
 {% extends "Accounting_button/base.html" %}
 {% block title %}Standard Operations Report{% endblock %}
 {% block content %}
-<div class="container mt-5">
-    <h1>Standard Operations Report</h1>
-    <p>Welcome, {{ user.username }}!</p>
+<h1 class="my-4">Standard Operations Report</h1>
+<p>Welcome, {{ user.username }}!</p>
 
-    <table class="table table-striped table-bordered mt-4">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Metric</th>
-                <th scope="col">Value</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Time Norm for Today</td>
-                <td>{{ time_norm_today }}</td>
-            </tr>
-            <tr>
-                <td>Time Norm for This Month</td>
-                <td>{{ time_norm_month }}</td>
-            </tr>
-            <tr>
-                <td>Operation Cost for Today</td>
-                <td>{{ operation_cost_today }}</td>
-            </tr>
-            <tr>
-                <td>Operation Cost for This Month</td>
-                <td>{{ operation_cost_month }}</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="card">
+    <div class="card-header">
+        <h3>Report Summary</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover">
+            <thead class="thead-light">
+                <tr>
+                    <th>Metric</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Time Norm Today</td>
+                    <td>{{ time_norm_today }}</td>
+                </tr>
+                <tr>
+                    <td>Time Norm This Month</td>
+                    <td>{{ time_norm_month }}</td>
+                </tr>
+                <tr>
+                    <td>Operation Cost for Today</td>
+                    <td>{{ operation_cost_today|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Operation Cost for This Month</td>
+                    <td>{{ operation_cost_month|floatformat:2 }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<a href="{% url 'owner_dashboard' %}" class="btn btn-secondary mt-4">Back to Dashboard</a>
 {% endblock %}
