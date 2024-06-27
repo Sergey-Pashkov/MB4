@@ -1,13 +1,113 @@
-<!-- templates/Accounting_button/client_edit.html -->
 {% extends "Accounting_button/base.html" %}
+{% load form_tags %}
 {% block title %}Edit Client{% endblock %}
 {% block content %}
-<h1>Edit Client</h1>
-<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
-<a href="{% url 'client_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">Edit Client</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.name.label_tag }}
+                                {{ form.name|add_class:"form-control" }}
+                                {{ form.name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.org_form.label_tag }}
+                                {{ form.org_form|add_class:"form-control" }}
+                                {{ form.org_form.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.inn.label_tag }}
+                                {{ form.inn|add_class:"form-control" }}
+                                {{ form.inn.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.contract_price.label_tag }}
+                                {{ form.contract_price|add_class:"form-control" }}
+                                {{ form.contract_price.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.tax_system.label_tag }}
+                                {{ form.tax_system|add_class:"form-control" }}
+                                {{ form.tax_system.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.contract_details.label_tag }}
+                                {{ form.contract_details|add_class:"form-control" }}
+                                {{ form.contract_details.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.contact_person.label_tag }}
+                                {{ form.contact_person|add_class:"form-control" }}
+                                {{ form.contact_person.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.phone.label_tag }}
+                                {{ form.phone|add_class:"form-control" }}
+                                {{ form.phone.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.email.label_tag }}
+                                {{ form.email|add_class:"form-control" }}
+                                {{ form.email.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.postal_address.label_tag }}
+                                {{ form.postal_address|add_class:"form-control" }}
+                                {{ form.postal_address.errors }}
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                {{ form.comments.label_tag }}
+                                {{ form.comments|add_class:"form-control" }}
+                                {{ form.comments.errors }}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="{% url 'client_list' %}" class="btn btn-secondary">Back to List</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
