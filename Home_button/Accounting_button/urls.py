@@ -15,7 +15,7 @@ from .views import deviation_log_list, create_deviation_log, update_deviation_lo
 
 from django.urls import path
 from . import views
-
+from .views import standard_operations_report 
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -55,4 +55,7 @@ urlpatterns = [
     path('deviation_logs/create/', views.create_deviation_log, name='create_deviation_log'),
     path('deviation_logs/<int:pk>/edit/', views.update_deviation_log, name='update_deviation_log'),
     path('deviation_logs/<int:pk>/delete/', views.delete_deviation_log, name='delete_deviation_log'),
+
+    # другие пути
+    path('standard_operations_report/', standard_operations_report, name='standard_operations_report'),
 ]

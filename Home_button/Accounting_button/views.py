@@ -367,6 +367,32 @@ def delete_deviation_log(request, pk):
         return redirect('deviation_log_list')
     return render(request, 'Accounting_button/deviation_log_confirm_delete.html', {'log': log})
 
+from django.shortcuts import render
+from django.db.models import Sum
+from .models import StandardOperationLog
+from datetime import datetime, timedelta
+
+def standard_operations_report(request):
+    today = datetime.today()
+    start_of_day = datetime.combine(today, datetime.min.time())
+    start_of_month = datetime(today.year, today.month, 1)
+
+    # Суммируем time_norm за текущий день и за текущий месяц
+    time_norm_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
+    time_norm_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
+
+    # Суммируем operation_cost за текущий день и за текущий месяц
+    operation_cost_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
+    operation_cost_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
+
+    context = {
+        'time_norm_today': time_norm_today,
+        'time_norm_month': time_norm_month,
+        'operation_cost_today': operation_cost_today,
+        'operation_cost_month': operation_cost_month,
+    }
+
+    return render(request, 'Accounting_button/standard_operations_report.html', context)
 
 
 
