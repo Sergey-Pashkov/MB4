@@ -41,10 +41,14 @@ class UnusualOperationLogForm(forms.ModelForm):
         model = UnusualOperationLog
         fields = ['operation_content', 'duration_minutes', 'client', 'price_category']
 
+from django import forms
+from .models import StandardOperationLog
+
 class StandardOperationLogForm(forms.ModelForm):
     class Meta:
         model = StandardOperationLog
-        fields = ['client', 'worktype']
+        fields = ['client', 'worktype', 'quantity']
+
 
 class DeviationLogForm(forms.ModelForm):
     class Meta:

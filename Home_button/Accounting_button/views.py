@@ -293,6 +293,14 @@ from django.utils.timezone import now
 from django.db.models import Sum
 from .models import StandardOperationLog
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from .models import StandardOperationLog
+from .forms import StandardOperationLogForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
 class StandardOperationLogListView(ListView):
     model = StandardOperationLog
     template_name = 'Accounting_button/standard_operation_log_list.html'
