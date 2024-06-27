@@ -119,6 +119,7 @@ def user_delete(request, user_id):
         return redirect('user_list')
     return render(request, 'Accounting_button/user_confirm_delete.html', {'user': user})
 
+# views.py
 @login_required
 def client_create(request):
     if request.method == 'POST':
@@ -128,7 +129,8 @@ def client_create(request):
             return redirect('client_list')
     else:
         client_form = ClientForm()
-    return render(request, 'Accounting_button/client_create.html', {'client_form': client_form})
+    return render(request, 'Accounting_button/client_create.html', {'form': client_form})
+
 
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
