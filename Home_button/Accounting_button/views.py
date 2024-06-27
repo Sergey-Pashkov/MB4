@@ -289,10 +289,23 @@ from .forms import StandardOperationLogForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-@method_decorator(login_required, name='dispatch')
+from django.utils.timezone import now
+from django.db.models import Sum
+from .models import StandardOperationLog
+
 class StandardOperationLogListView(ListView):
     model = StandardOperationLog
     template_name = 'Accounting_button/standard_operation_log_list.html'
+    context_object_name = 'object_list'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = now().date()
+        month_start = today.replace(day=1)
+
+        context['time_norm_today'] = StandardOperationLog.objects.filter(timestamp__date=today).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
+        context['time_norm_month'] = StandardOperationLog.objects.filter(timestamp__date__gte=month_start).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
+        return context
 
 @method_decorator(login_required, name='dispatch')
 class StandardOperationLogCreateView(CreateView):
