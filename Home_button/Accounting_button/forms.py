@@ -41,12 +41,9 @@ class UnusualOperationLogForm(forms.ModelForm):
         model = UnusualOperationLog
         fields = ['operation_content', 'duration_minutes', 'client', 'price_category']
 
-from django import forms
-from .models import StandardOperationLog
-
 # forms.py
 from django import forms
-from .models import StandardOperationLog, WorkType
+from .models import StandardOperationLog, WorkType, Client
 
 class StandardOperationLogForm(forms.ModelForm):
     class Meta:
@@ -61,6 +58,14 @@ class StandardOperationLogForm(forms.ModelForm):
         # Добавляем номера к названиям работы
         self.fields['worktype'].choices = [
             (wt.id, f"{wt.id} - {wt.name}") for wt in WorkType.objects.all()
+        ]
+
+        self.fields['client'].queryset = Client.objects.all()
+        self.fields['client'].widget.attrs.update({'class': 'form-control'})
+
+        # Добавляем номера к названиям клиентов
+        self.fields['client'].choices = [
+            (client.id, f"{client.id} - {client.name}") for client in Client.objects.all()
         ]
 
 
