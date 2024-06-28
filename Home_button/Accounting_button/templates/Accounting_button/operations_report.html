@@ -1,30 +1,91 @@
-<!-- templates/Accounting_button/operations_report.html -->
 {% extends "Accounting_button/base.html" %}
+
 {% block title %}Operations Report{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-    <h1>Operations Report</h1>
-    <p>Welcome, {{ user.username }}!</p>
-    <div class="card mt-4">
-        <div class="card-header bg-primary text-white">
-            <h3 class="card-title">Standard Operations</h3>
-        </div>
-        <div class="card-body">
-            <p><strong>Time Norm Today:</strong> {{ time_norm_today }}</p>
-            <p><strong>Time Norm This Month:</strong> {{ time_norm_month }}</p>
-            <p><strong>Operation Cost Today:</strong> {{ operation_cost_standard_today|floatformat:2 }}</p>
-            <p><strong>Operation Cost This Month:</strong> {{ operation_cost_standard_month|floatformat:2 }}</p>
-        </div>
-    </div>
-    <div class="card mt-4">
-        <div class="card-header bg-primary text-white">
-            <h3 class="card-title">Unusual Operations</h3>
-        </div>
-        <div class="card-body">
-            <p><strong>Duration Today:</strong> {{ duration_today }}</p>
-            <p><strong>Duration This Month:</strong> {{ duration_month }}</p>
-            <p><strong>Operation Cost Today:</strong> {{ operation_cost_unusual_today|floatformat:2 }}</p>
-            <p><strong>Operation Cost This Month:</strong> {{ operation_cost_unusual_month|floatformat:2 }}</p>
+    <h1 class="text-center mb-4">Operations Report</h1>
+    <p class="text-center">Welcome, {{ user.username }}!</p>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title">Standard Operations</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Time Norm Today</th>
+                                <th>Time Norm This Month</th>
+                                <th>Operation Cost Today</th>
+                                <th>Operation Cost This Month</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ time_norm_today }}</td>
+                                <td>{{ time_norm_month }}</td>
+                                <td>{{ standard_operation_cost_today|floatformat:2 }}</td>
+                                <td>{{ standard_operation_cost_month|floatformat:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="card-title">Unusual Operations</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Duration Today</th>
+                                <th>Duration This Month</th>
+                                <th>Operation Cost Today</th>
+                                <th>Operation Cost This Month</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ duration_today }}</td>
+                                <td>{{ duration_month }}</td>
+                                <td>{{ unusual_operation_cost_today|floatformat:2 }}</td>
+                                <td>{{ unusual_operation_cost_month|floatformat:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="card-title">Total Operation Metrics</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Total Time Today</th>
+                                <th>Total Time This Month</th>
+                                <th>Total Operation Cost Today</th>
+                                <th>Total Operation Cost This Month</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ total_time_today }}</td>
+                                <td>{{ total_time_month }}</td>
+                                <td>{{ total_cost_today|floatformat:2 }}</td>
+                                <td>{{ total_cost_month|floatformat:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
