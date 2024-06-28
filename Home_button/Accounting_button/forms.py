@@ -36,10 +36,22 @@ class WorkTypeForm(forms.ModelForm):
         model = WorkType
         fields = ['name', 'time_norm', 'price_category', 'comments']
 
+# forms.py
+from django import forms
+from .models import UnusualOperationLog, Client
+
 class UnusualOperationLogForm(forms.ModelForm):
     class Meta:
         model = UnusualOperationLog
         fields = ['operation_content', 'duration_minutes', 'client', 'price_category']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['client'].queryset = Client.objects.all()
+        self.fields['client'].widget.attrs.update({'class': 'form-control'})
+        self.fields['client'].choices = [
+            (client.id, f"{client.id} - {client.name}") for client in Client.objects.all()
+        ]
 
 # forms.py
 from django import forms
