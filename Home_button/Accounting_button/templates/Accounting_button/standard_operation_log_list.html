@@ -1,9 +1,22 @@
 {% extends "Accounting_button/base.html" %}
 {% block title %}Standard Operation Log List{% endblock %}
 {% block content %}
-<div class="container mt-5">
+<style>
+    .table-responsive {
+        height: 600px;
+        overflow-y: auto;
+    }
+    .table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #343a40;
+        color: white;
+        z-index: 1;
+    }
+</style>
+<div class="container-fluid mt-5">
     <div class="row">
-        <div class="col-md-12">
+        <div class="col-12">
             <h1>Standard Operation Log List</h1>
             <p>Welcome, {{ user.username }}!</p>
             <a href="{% url 'standard_operation_log_create' %}" class="btn btn-primary mb-3">Add Standard Operation Log</a>
