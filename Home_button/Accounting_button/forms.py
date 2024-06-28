@@ -44,10 +44,24 @@ class UnusualOperationLogForm(forms.ModelForm):
 from django import forms
 from .models import StandardOperationLog
 
+# forms.py
+from django import forms
+from .models import StandardOperationLog, WorkType
+
 class StandardOperationLogForm(forms.ModelForm):
     class Meta:
         model = StandardOperationLog
         fields = ['client', 'worktype', 'quantity']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['worktype'].queryset = WorkType.objects.all()
+        self.fields['worktype'].widget.attrs.update({'class': 'form-control'})
+
+        # Добавляем номера к названиям работы
+        self.fields['worktype'].choices = [
+            (wt.id, f"{wt.id} - {wt.name}") for wt in WorkType.objects.all()
+        ]
 
 
 class DeviationLogForm(forms.ModelForm):
