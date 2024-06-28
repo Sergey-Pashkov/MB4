@@ -1,50 +1,57 @@
 {% extends "Accounting_button/base.html" %}
 {% block title %}Standard Operation Log List{% endblock %}
 {% block content %}
-<h1>Standard Operation Log List</h1>
-<p>Welcome, {{ user.username }}!</p>
-<a href="{% url 'standard_operation_log_create' %}" class="btn btn-primary mb-3">Add Standard Operation Log</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Client</th>
-            <th>INN</th>
-            <th>Work Type</th>
-            <th>Time Norm</th>
-            <th>Price Category</th>
-            <th>Cost per Minute</th>
-            <th>Quantity</th>
-            <th>Operation Cost</th>
-            <th>Author</th>
-            <th>Timestamp</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for log in object_list %}
-        <tr>
-            <td>{{ log.id }}</td>
-            <td>{{ log.client }}</td>
-            <td>{{ log.client.inn }}</td>
-            <td>{{ log.worktype }}</td>
-            <td>{{ log.time_norm }}</td>
-            <td>{{ log.price_category }}</td>
-            <td>{{ log.cost_per_minute }}</td>
-            <td>{{ log.quantity }}</td>
-            <td>{{ log.operation_cost }}</td>
-            <td>{{ log.author }}</td>
-            <td>{{ log.timestamp }}</td>
-            <td>
-                <a href="{% url 'standard_operation_log_update' log.id %}" class="btn btn-warning btn-sm">Edit</a>
-                <form method="post" action="{% url 'standard_operation_log_delete' log.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Standard Operation Log List</h1>
+            <p>Welcome, {{ user.username }}!</p>
+            <a href="{% url 'standard_operation_log_create' %}" class="btn btn-primary mb-3">Add Standard Operation Log</a>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Client</th>
+                            <th>INN</th>
+                            <th>Work Type</th>
+                            <th>Time Norm</th>
+                            <th>Price Category</th>
+                            <th>Cost per Minute</th>
+                            <th>Quantity</th>
+                            <th>Operation Cost</th>
+                            <th>Author</th>
+                            <th>Timestamp</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in object_list %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <td>{{ log.client }}</td>
+                            <td>{{ log.client.inn }}</td>
+                            <td>{{ log.worktype }}</td>
+                            <td>{{ log.time_norm }}</td>
+                            <td>{{ log.price_category }}</td>
+                            <td>{{ log.cost_per_minute }}</td>
+                            <td>{{ log.quantity }}</td>
+                            <td>{{ log.operation_cost }}</td>
+                            <td>{{ log.author }}</td>
+                            <td>{{ log.timestamp }}</td>
+                            <td>
+                                <a href="{% url 'standard_operation_log_update' log.id %}" class="btn btn-warning btn-sm">Edit</a>
+                                <form method="post" action="{% url 'standard_operation_log_delete' log.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

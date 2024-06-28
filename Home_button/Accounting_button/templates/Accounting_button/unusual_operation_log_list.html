@@ -1,46 +1,54 @@
-<!-- templates/Accounting_button/unusual_operation_log_list.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Unusual Operation Log List{% endblock %}
 {% block content %}
-<h1>Unusual Operation Log List</h1>
-<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
-<a href="{% url 'create_unusual_operation_log' %}" class="btn btn-primary mb-3">Add New Log</a>
-<table class="table">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Operation Content</th>
-            <th>Duration Minutes</th>
-            <th>Operation Cost</th>
-            <th>Client</th>
-            <th>INN</th>
-            <th>Author</th>
-            <th>Price Category</th>
-            <th>Timestamp</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for log in logs %}
-        <tr>
-            <td>{{ log.id }}</td>
-            <td>{{ log.operation_content }}</td>
-            <td>{{ log.duration_minutes }}</td>
-            <td>{{ log.operation_cost }}</td>
-            <td>{{ log.client }}</td>
-            <td>{{ log.client.inn }}</td>
-            <td>{{ log.author }}</td>
-            <td>{{ log.price_category }}</td>
-            <td>{{ log.timestamp }}</td>
-            <td>
-                <a href="{% url 'unusual_operation_log_update' log.id %}" class="btn btn-warning btn-sm">Edit</a>
-                <form method="post" action="{% url 'unusual_operation_log_delete' log.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container mt-5">
+    <h1 class="mb-4">Unusual Operation Log List</h1>
+    <p>Welcome, {{ user.username }}!</p>
+    <a href="{% url 'create_unusual_operation_log' %}" class="btn btn-primary mb-3">Add New Log</a>
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title">Logs</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="thead-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Operation Content</th>
+                        <th>Duration Minutes</th>
+                        <th>Operation Cost</th>
+                        <th>Client</th>
+                        <th>INN</th>
+                        <th>Author</th>
+                        <th>Price Category</th>
+                        <th>Timestamp</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.id }}</td>
+                        <td>{{ log.operation_content }}</td>
+                        <td>{{ log.duration_minutes }}</td>
+                        <td>{{ log.operation_cost }}</td>
+                        <td>{{ log.client }}</td>
+                        <td>{{ log.client.inn }}</td>
+                        <td>{{ log.author }}</td>
+                        <td>{{ log.price_category }}</td>
+                        <td>{{ log.timestamp }}</td>
+                        <td>
+                            <a href="{% url 'unusual_operation_log_update' log.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <form method="post" action="{% url 'unusual_operation_log_delete' log.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}
