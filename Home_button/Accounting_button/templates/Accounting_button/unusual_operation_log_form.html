@@ -1,20 +1,62 @@
-<!-- templates/Accounting_button/unusual_operation_log_form.html -->
 {% extends "Accounting_button/base.html" %}
+{% load widget_tweaks %}
+
 {% block title %}{{ form.instance.pk|yesno:"Edit Unusual Operation Log,Create Unusual Operation Log" }}{% endblock %}
 
 {% block content %}
-<h1>{{ form.instance.pk|yesno:"Edit Unusual Operation Log,Create Unusual Operation Log" }}</h1>
-<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div class="form-group">
-        <label for="operation_cost">Стоимость операции</label>
-        <input type="text" id="operation_cost" class="form-control" readonly value="{{ form.instance.operation_cost }}">
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">{{ form.instance.pk|yesno:"Edit Unusual Operation Log,Create Unusual Operation Log" }}</h3>
+                </div>
+                <div class="card-body">
+                    <p>Welcome, {{ user.username }}!</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="{{ form.operation_content.id_for_label }}" class="col-sm-3 col-form-label">Operation Content</label>
+                            <div class="col-sm-9">
+                                {{ form.operation_content|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.duration_minutes.id_for_label }}" class="col-sm-3 col-form-label">Duration Minutes</label>
+                            <div class="col-sm-9">
+                                {{ form.duration_minutes|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.client.id_for_label }}" class="col-sm-3 col-form-label">Client</label>
+                            <div class="col-sm-9">
+                                {{ form.client|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.price_category.id_for_label }}" class="col-sm-3 col-form-label">Price Category</label>
+                            <div class="col-sm-9">
+                                {{ form.price_category|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="operation_cost" class="col-sm-3 col-form-label">Operation Cost</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="operation_cost" class="form-control" readonly value="{{ form.instance.operation_cost }}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-9 offset-sm-3">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="{% url 'unusual_operation_log_list' %}" class="btn btn-secondary ml-2">Back to List</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
-<a href="{% url 'unusual_operation_log_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+</div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
