@@ -33,6 +33,12 @@
                                 {{ form.quantity|add_class:"form-control" }}
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="operation_cost" class="col-sm-3 col-form-label">Operation Cost</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="operation_cost" class="form-control" readonly>
+                            </div>
+                        </div>
                         <button type="submit" class="btn btn-primary">Save</button>
                     </form>
                     <a href="{% url 'standard_operation_log_list' %}" class="btn btn-secondary mt-3">Back to List</a>
@@ -41,4 +47,43 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const worktypeField = document.querySelector('#id_worktype');
+    const quantityField = document.querySelector('#id_quantity');
+    const operationCostField = document.querySelector('#operation_cost');
+
+    function updateOperationCost() {
+        const worktype = worktypeField.value;
+        const quantity = parseFloat(quantityField.value);
+
+        if (isNaN(quantity)) {
+            operationCostField.value = 'Invalid quantity';
+            return;
+        }
+
+        fetch(`/api/worktype-cost/${worktype}/`)
+            .then(response => response.json())
+            .then(data => {
+                const costPerMinute = parseFloat(data.cost_per_minute);
+                const timeNorm = parseFloat(data.time_norm);
+
+                if (!isNaN(costPerMinute) && !isNaN(timeNorm)) {
+                    const totalCost = (costPerMinute * timeNorm * quantity).toFixed(2);
+                    operationCostField.value = totalCost;
+                } else {
+                    operationCostField.value = 'Cost not available';
+                }
+            })
+            .catch(error => {
+                operationCostField.value = 'Error fetching cost';
+            });
+    }
+
+    worktypeField.addEventListener('change', updateOperationCost);
+    quantityField.addEventListener('input', updateOperationCost);
+    updateOperationCost();
+});
+</script>
 {% endblock %}

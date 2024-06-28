@@ -527,3 +527,25 @@ def operations_report(request):
     }
 
     return render(request, 'Accounting_button/operations_report.html', context)
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+from .models import WorkType, Constant
+
+def worktype_cost(request, pk):
+    try:
+        worktype = get_object_or_404(WorkType, pk=pk)
+        if worktype.price_category == 'Главный бухгалтер':
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+        elif worktype.price_category == 'Бухгалтер':
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+        else:
+            cost_per_minute = 0  # Задайте значение по умолчанию или обработайте другие категории
+        
+        data = {
+            'cost_per_minute': float(cost_per_minute),
+            'time_norm': worktype.time_norm,
+        }
+        return JsonResponse(data)
+    except Constant.DoesNotExist:
+        return JsonResponse({'error': 'Constant not found'}, status=404)

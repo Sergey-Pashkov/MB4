@@ -19,6 +19,9 @@ from .views import standard_operations_report
 from .views import unusual_operations_report
 from .views import operations_report
 
+
+
+
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
     path('clients/create/', views.client_create, name='client_create'),
@@ -66,4 +69,7 @@ urlpatterns = [
 
     # другие пути
     path('operations_report/', operations_report, name='operations_report'),
+
+    # ... другие маршруты ...
+    path('api/worktype-cost/<int:pk>/', views.worktype_cost, name='worktype_cost'),
 ]
