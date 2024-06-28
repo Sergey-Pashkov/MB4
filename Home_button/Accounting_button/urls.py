@@ -17,6 +17,7 @@ from django.urls import path
 from . import views
 from .views import standard_operations_report 
 from .views import unusual_operations_report
+from .views import operations_report
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -62,4 +63,7 @@ urlpatterns = [
 
     # ... другие пути ...
     path('unusual_operations_report/', unusual_operations_report, name='unusual_operations_report'),
+
+    # другие пути
+    path('operations_report/', operations_report, name='operations_report'),
 ]

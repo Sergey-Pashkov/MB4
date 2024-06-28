@@ -1,0 +1,31 @@
+<!-- templates/Accounting_button/operations_report.html -->
+{% extends "Accounting_button/base.html" %}
+{% block title %}Operations Report{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h1>Operations Report</h1>
+    <p>Welcome, {{ user.username }}!</p>
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title">Standard Operations</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Time Norm Today:</strong> {{ time_norm_today }}</p>
+            <p><strong>Time Norm This Month:</strong> {{ time_norm_month }}</p>
+            <p><strong>Operation Cost Today:</strong> {{ operation_cost_standard_today|floatformat:2 }}</p>
+            <p><strong>Operation Cost This Month:</strong> {{ operation_cost_standard_month|floatformat:2 }}</p>
+        </div>
+    </div>
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h3 class="card-title">Unusual Operations</h3>
+        </div>
+        <div class="card-body">
+            <p><strong>Duration Today:</strong> {{ duration_today }}</p>
+            <p><strong>Duration This Month:</strong> {{ duration_month }}</p>
+            <p><strong>Operation Cost Today:</strong> {{ operation_cost_unusual_today|floatformat:2 }}</p>
+            <p><strong>Operation Cost This Month:</strong> {{ operation_cost_unusual_month|floatformat:2 }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -459,4 +459,51 @@ def unusual_operations_report(request):
 
     return render(request, 'Accounting_button/unusual_operations_report.html', context)
 
+from django.shortcuts import render
+from django.utils.timezone import now
+from django.db.models import Sum, F
+from .models import StandardOperationLog, UnusualOperationLog
+from datetime import datetime
+
+def operations_report(request):
+    today = datetime.today()
+    start_of_day = datetime.combine(today, datetime.min.time())
+    start_of_month = datetime(today.year, today.month, 1)
+
+    # Стандартные операции
+    time_norm_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(
+        total_time_norm=Sum(F('time_norm') * F('quantity'))
+    )['total_time_norm'] or 0
+
+    time_norm_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(
+        total_time_norm=Sum(F('time_norm') * F('quantity'))
+    )['total_time_norm'] or 0
+
+    operation_cost_standard_today = StandardOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
+
+    operation_cost_standard_month = StandardOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
+
+    # Нестандартные операции
+    duration_today = UnusualOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('duration_minutes'))['duration_minutes__sum'] or 0
+    duration_month = UnusualOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('duration_minutes'))['duration_minutes__sum'] or 0
+
+    operation_cost_unusual_today = UnusualOperationLog.objects.filter(timestamp__gte=start_of_day).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
+    operation_cost_unusual_month = UnusualOperationLog.objects.filter(timestamp__gte=start_of_month).aggregate(Sum('operation_cost'))['operation_cost__sum'] or 0
+
+    context = {
+        'time_norm_today': time_norm_today,
+        'time_norm_month': time_norm_month,
+        'operation_cost_standard_today': operation_cost_standard_today,
+        'operation_cost_standard_month': operation_cost_standard_month,
+        'duration_today': duration_today,
+        'duration_month': duration_month,
+        'operation_cost_unusual_today': operation_cost_unusual_today,
+        'operation_cost_unusual_month': operation_cost_unusual_month,
+    }
+
+    return render(request, 'Accounting_button/operations_report.html', context)
 
