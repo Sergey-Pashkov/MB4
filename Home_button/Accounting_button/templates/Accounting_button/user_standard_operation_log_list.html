@@ -1,0 +1,70 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Список стандартных операций пользователя{% endblock %}
+{% block content %}
+<style>
+    .table-responsive {
+        height: 600px;
+        overflow-y: auto;
+    }
+    .table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #343a40;
+        color: white;
+        z-index: 1;
+    }
+</style>
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1>Список стандартных операций пользователя</h1>
+            <p>Добро пожаловать, {{ user.username }}!</p>
+            <a href="{% url 'user_standard_operation_log_create' %}" class="btn btn-primary mb-3">Добавить стандартную операцию</a>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Клиент</th>
+                            <th>ИНН</th>
+                            <th>Тип работы</th>
+                            <th>Норма времени</th>
+                            <th>Категория цены</th>
+                            <th>Стоимость за минуту</th>
+                            <th>Количество</th>
+                            <th>Стоимость операции</th>
+                            <th>Автор</th>
+                            <th>Время</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in object_list %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <td>{{ log.client }}</td>
+                            <td>{{ log.client.inn }}</td>
+                            <td>{{ log.worktype }}</td>
+                            <td>{{ log.time_norm }}</td>
+                            <td>{{ log.price_category }}</td>
+                            <td>{{ log.cost_per_minute }}</td>
+                            <td>{{ log.quantity }}</td>
+                            <td>{{ log.operation_cost }}</td>
+                            <td>{{ log.author }}</td>
+                            <td>{{ log.timestamp }}</td>
+                            <td>
+                                <a href="{% url 'user_standard_operation_log_update' log.id %}" class="btn btn-warning btn-sm">Редактировать</a>
+                                <form method="post" action="{% url 'user_standard_operation_log_delete' log.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger btn-sm">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

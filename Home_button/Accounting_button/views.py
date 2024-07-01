@@ -306,6 +306,11 @@ from .forms import StandardOperationLogForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
+
+
+
+
+
 class StandardOperationLogListView(ListView):
     model = StandardOperationLog
     template_name = 'Accounting_button/standard_operation_log_list.html'
@@ -343,6 +348,10 @@ class StandardOperationLogDeleteView(DeleteView):
     model = StandardOperationLog
     template_name = 'Accounting_button/standard_operation_log_confirm_delete.html'
     success_url = reverse_lazy('standard_operation_log_list')
+
+
+
+
 
 
 from django.shortcuts import render, get_object_or_404, redirect
@@ -549,3 +558,61 @@ def worktype_cost(request, pk):
         return JsonResponse(data)
     except Constant.DoesNotExist:
         return JsonResponse({'error': 'Constant not found'}, status=404)
+
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.utils.timezone import now
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.db.models import Sum
+from .models import StandardOperationLog
+from .forms import StandardOperationLogForm
+
+class UserStandardOperationLogListView(ListView):
+    model = StandardOperationLog
+    template_name = 'Accounting_button/user_standard_operation_log_list.html'
+    context_object_name = 'object_list'
+
+    def get_queryset(self):
+        return StandardOperationLog.objects.filter(author=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = now().date()
+        month_start = today.replace(day=1)
+
+        context['time_norm_today'] = StandardOperationLog.objects.filter(author=self.request.user, timestamp__date=today).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
+        context['time_norm_month'] = StandardOperationLog.objects.filter(author=self.request.user, timestamp__date__gte=month_start).aggregate(Sum('time_norm'))['time_norm__sum'] or 0
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class UserStandardOperationLogCreateView(CreateView):
+    model = StandardOperationLog
+    form_class = StandardOperationLogForm
+    template_name = 'Accounting_button/user_standard_operation_log_form.html'
+    success_url = reverse_lazy('user_standard_operation_log_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class UserStandardOperationLogUpdateView(UpdateView):
+    model = StandardOperationLog
+    form_class = StandardOperationLogForm
+    template_name = 'Accounting_button/user_standard_operation_log_form.html'
+    success_url = reverse_lazy('user_standard_operation_log_list')
+
+    def get_object(self):
+        return get_object_or_404(StandardOperationLog, pk=self.kwargs['pk'], author=self.request.user)
+
+@method_decorator(login_required, name='dispatch')
+class UserStandardOperationLogDeleteView(DeleteView):
+    model = StandardOperationLog
+    template_name = 'Accounting_button/user_standard_operation_log_confirm_delete.html'
+    success_url = reverse_lazy('user_standard_operation_log_list')
+
+    def get_object(self):
+        return get_object_or_404(StandardOperationLog, pk=self.kwargs['pk'], author=self.request.user)

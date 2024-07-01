@@ -1,0 +1,89 @@
+{% extends "Accounting_button/base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}{{ form.instance.pk|yesno:"Редактировать стандартную операцию,Создать стандартную операцию" }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">{{ form.instance.pk|yesno:"Редактировать стандартную операцию,Создать стандартную операцию" }}</h3>
+                </div>
+                <div class="card-body">
+                    <p>Добро пожаловать, {{ user.username }}!</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="{{ form.client.id_for_label }}" class="col-sm-3 col-form-label">Клиент</label>
+                            <div class="col-sm-9">
+                                {{ form.client|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.worktype.id_for_label }}" class="col-sm-3 col-form-label">Тип работы</label>
+                            <div class="col-sm-9">
+                                {{ form.worktype|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.quantity.id_for_label }}" class="col-sm-3 col-form-label">Количество</label>
+                            <div class="col-sm-9">
+                                {{ form.quantity|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="operation_cost" class="col-sm-3 col-form-label">Стоимость операции</label>
+                            <div class="col-sm-9">
+                                <input type="text" id="operation_cost" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    </form>
+                    <a href="{% url 'user_standard_operation_log_list' %}" class="btn btn-secondary mt-3">Назад к списку</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const worktypeField = document.querySelector('#id_worktype');
+    const quantityField = document.querySelector('#id_quantity');
+    const operationCostField = document.querySelector('#operation_cost');
+
+    function updateOperationCost() {
+        const worktype = worktypeField.value;
+        const quantity = parseFloat(quantityField.value);
+
+        if (isNaN(quantity)) {
+            operationCostField.value = 'Invalid quantity';
+            return;
+        }
+
+        fetch(`/api/worktype-cost/${worktype}/`)
+            .then(response => response.json())
+            .then(data => {
+                const costPerMinute = parseFloat(data.cost_per_minute);
+                const timeNorm = parseFloat(data.time_norm);
+
+                if (!isNaN(costPerMinute) && !isNaN(timeNorm)) {
+                    const totalCost = (costPerMinute * timeNorm * quantity).toFixed(2);
+                    operationCostField.value = totalCost;
+                } else {
+                    operationCostField.value = 'Cost not available';
+                }
+            })
+            .catch(error => {
+                operationCostField.value = 'Error fetching cost';
+            });
+    }
+
+    worktypeField.addEventListener('change', updateOperationCost);
+    quantityField.addEventListener('input', updateOperationCost);
+    updateOperationCost();
+});
+</script>
+{% endblock %}

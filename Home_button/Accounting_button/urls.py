@@ -19,6 +19,7 @@ from .views import standard_operations_report
 from .views import unusual_operations_report
 from .views import operations_report
 
+from .views import UserStandardOperationLogListView, UserStandardOperationLogCreateView, UserStandardOperationLogUpdateView, UserStandardOperationLogDeleteView
 
 
 
@@ -72,4 +73,9 @@ urlpatterns = [
 
     # ... другие маршруты ...
     path('api/worktype-cost/<int:pk>/', views.worktype_cost, name='worktype_cost'),
+
+    path('user_standard_operation_logs/', UserStandardOperationLogListView.as_view(), name='user_standard_operation_log_list'),
+    path('user_standard_operation_logs/create/', UserStandardOperationLogCreateView.as_view(), name='user_standard_operation_log_create'),
+    path('user_standard_operation_logs/update/<int:pk>/', UserStandardOperationLogUpdateView.as_view(), name='user_standard_operation_log_update'),
+    path('user_standard_operation_logs/delete/<int:pk>/', UserStandardOperationLogDeleteView.as_view(), name='user_standard_operation_log_delete'),
 ]

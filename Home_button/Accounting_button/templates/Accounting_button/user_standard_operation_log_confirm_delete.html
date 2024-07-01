@@ -1,0 +1,11 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Подтверждение удаления{% endblock %}
+{% block content %}
+<h1>Подтверждение удаления</h1>
+<p>Вы уверены, что хотите удалить эту запись?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Подтвердить</button>
+    <a href="{% url 'user_standard_operation_log_list' %}" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

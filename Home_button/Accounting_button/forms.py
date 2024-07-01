@@ -85,3 +85,4 @@ class DeviationLogForm(forms.ModelForm):
     class Meta:
         model = DeviationLog
         fields = ['content', 'reason', 'client', 'comments']
+
