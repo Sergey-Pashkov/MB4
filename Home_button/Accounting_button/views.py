@@ -616,3 +616,103 @@ class UserStandardOperationLogDeleteView(DeleteView):
 
     def get_object(self):
         return get_object_or_404(StandardOperationLog, pk=self.kwargs['pk'], author=self.request.user)
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.utils.timezone import now
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.db.models import Sum
+from .models import UnusualOperationLog
+from .forms import UnusualOperationLogForm
+
+class UserUnusualOperationLogListView(ListView):
+    model = UnusualOperationLog
+    template_name = 'Accounting_button/user_unusual_operation_log_list.html'
+    context_object_name = 'logs'
+
+    def get_queryset(self):
+        return UnusualOperationLog.objects.filter(author=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = now().date()
+        month_start = today.replace(day=1)
+
+        context['time_norm_today'] = UnusualOperationLog.objects.filter(author=self.request.user, timestamp__date=today).aggregate(Sum('duration_minutes'))['duration_minutes__sum'] or 0
+        context['time_norm_month'] = UnusualOperationLog.objects.filter(author=self.request.user, timestamp__date__gte=month_start).aggregate(Sum('duration_minutes'))['duration_minutes__sum'] or 0
+        return context
+
+
+@method_decorator(login_required, name='dispatch')
+class UserUnusualOperationLogDeleteView(DeleteView):
+    model = UnusualOperationLog
+    template_name = 'Accounting_button/user_unusual_operation_log_confirm_delete.html'
+    success_url = reverse_lazy('user_unusual_operation_log_list')
+
+    def get_object(self):
+        return get_object_or_404(UnusualOperationLog, pk=self.kwargs['pk'], author=self.request.user)
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic import CreateView, UpdateView
+from django.urls import reverse_lazy
+from .models import UnusualOperationLog, Constant
+from .forms import UnusualOperationLogForm
+
+@method_decorator(login_required, name='dispatch')
+class UserUnusualOperationLogCreateView(CreateView):
+    model = UnusualOperationLog
+    form_class = UnusualOperationLogForm
+    template_name = 'Accounting_button/user_unusual_operation_log_form.html'
+    success_url = reverse_lazy('user_unusual_operation_log_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['chief_accountant_cost'] = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+        context['accountant_cost'] = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+        return context
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        price_category = form.cleaned_data.get('price_category')
+        duration_minutes = form.cleaned_data.get('duration_minutes')
+
+        if price_category == 'Главный бухгалтер':
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+        elif price_category == 'Бухгалтер':
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+        else:
+            cost_per_minute = 0
+
+        form.instance.operation_cost = cost_per_minute * duration_minutes
+        return super().form_valid(form)
+
+@method_decorator(login_required, name='dispatch')
+class UserUnusualOperationLogUpdateView(UpdateView):
+    model = UnusualOperationLog
+    form_class = UnusualOperationLogForm
+    template_name = 'Accounting_button/user_unusual_operation_log_form.html'
+    success_url = reverse_lazy('user_unusual_operation_log_list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['chief_accountant_cost'] = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+        context['accountant_cost'] = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+        return context
+
+    def form_valid(self, form):
+        price_category = form.cleaned_data.get('price_category')
+        duration_minutes = form.cleaned_data.get('duration_minutes')
+
+        if price_category == 'Главный бухгалтер':
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени Главного бухгалтера").value
+        elif price_category == 'Бухгалтер':
+            cost_per_minute = Constant.objects.get(name="Стоимость минуты рабочего времени бухгалтера").value
+        else:
+            cost_per_minute = 0
+
+        form.instance.operation_cost = cost_per_minute * duration_minutes
+        return super().form_valid(form)

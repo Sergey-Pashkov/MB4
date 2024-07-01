@@ -21,6 +21,8 @@ from .views import operations_report
 
 from .views import UserStandardOperationLogListView, UserStandardOperationLogCreateView, UserStandardOperationLogUpdateView, UserStandardOperationLogDeleteView
 
+from .views import UserUnusualOperationLogListView, UserUnusualOperationLogCreateView, UserUnusualOperationLogUpdateView, UserUnusualOperationLogDeleteView
+
 
 
 urlpatterns = [
@@ -78,4 +80,9 @@ urlpatterns = [
     path('user_standard_operation_logs/create/', UserStandardOperationLogCreateView.as_view(), name='user_standard_operation_log_create'),
     path('user_standard_operation_logs/update/<int:pk>/', UserStandardOperationLogUpdateView.as_view(), name='user_standard_operation_log_update'),
     path('user_standard_operation_logs/delete/<int:pk>/', UserStandardOperationLogDeleteView.as_view(), name='user_standard_operation_log_delete'),
+
+    path('user_unusual_operation_logs/', UserUnusualOperationLogListView.as_view(), name='user_unusual_operation_log_list'),
+    path('user_unusual_operation_logs/create/', UserUnusualOperationLogCreateView.as_view(), name='user_unusual_operation_log_create'),
+    path('user_unusual_operation_logs/update/<int:pk>/', UserUnusualOperationLogUpdateView.as_view(), name='user_unusual_operation_log_update'),
+    path('user_unusual_operation_logs/delete/<int:pk>/', UserUnusualOperationLogDeleteView.as_view(), name='user_unusual_operation_log_delete'),
 ]
