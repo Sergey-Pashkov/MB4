@@ -446,6 +446,8 @@ from django.db.models import Sum
 from .models import UnusualOperationLog
 from datetime import datetime
 
+
+
 def unusual_operations_report(request):
     today = datetime.today()
     start_of_day = datetime.combine(today, datetime.min.time())
@@ -536,6 +538,11 @@ def operations_report(request):
     }
 
     return render(request, 'Accounting_button/operations_report.html', context)
+
+
+
+
+
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -716,3 +723,75 @@ class UserUnusualOperationLogUpdateView(UpdateView):
 
         form.instance.operation_cost = cost_per_minute * duration_minutes
         return super().form_valid(form)
+
+
+from django.db.models import Sum, F
+from django.shortcuts import render
+from django.utils.timezone import now
+from .models import StandardOperationLog, UnusualOperationLog
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def user_operations_report(request):
+    today = now().date()
+    start_of_day = today
+    start_of_month = today.replace(day=1)
+
+    # Суммируем произведение time_norm и quantity за текущий день и за текущий месяц
+    time_norm_today = StandardOperationLog.objects.filter(author=request.user, timestamp__date=today).aggregate(
+        total_time_norm=Sum(F('time_norm') * F('quantity'))
+    )['total_time_norm'] or 0
+
+    time_norm_month = StandardOperationLog.objects.filter(author=request.user, timestamp__date__gte=start_of_month).aggregate(
+        total_time_norm=Sum(F('time_norm') * F('quantity'))
+    )['total_time_norm'] or 0
+
+    # Суммируем operation_cost за текущий день и за текущий месяц
+    standard_operation_cost_today = StandardOperationLog.objects.filter(author=request.user, timestamp__date=today).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
+
+    standard_operation_cost_month = StandardOperationLog.objects.filter(author=request.user, timestamp__date__gte=start_of_month).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
+
+    # Суммируем duration_minutes за текущий день и за текущий месяц
+    duration_today = UnusualOperationLog.objects.filter(author=request.user, timestamp__date=today).aggregate(
+        total_duration=Sum('duration_minutes')
+    )['total_duration'] or 0
+
+    duration_month = UnusualOperationLog.objects.filter(author=request.user, timestamp__date__gte=start_of_month).aggregate(
+        total_duration=Sum('duration_minutes')
+    )['total_duration'] or 0
+
+    # Суммируем operation_cost за текущий день и за текущий месяц
+    unusual_operation_cost_today = UnusualOperationLog.objects.filter(author=request.user, timestamp__date=today).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
+
+    unusual_operation_cost_month = UnusualOperationLog.objects.filter(author=request.user, timestamp__date__gte=start_of_month).aggregate(
+        total_operation_cost=Sum('operation_cost')
+    )['total_operation_cost'] or 0
+
+    # Общие значения для времени и стоимости всех операций
+    total_time_today = time_norm_today + duration_today
+    total_time_month = time_norm_month + duration_month
+    total_cost_today = standard_operation_cost_today + unusual_operation_cost_today
+    total_cost_month = standard_operation_cost_month + unusual_operation_cost_month
+
+    context = {
+        'time_norm_today': time_norm_today,
+        'time_norm_month': time_norm_month,
+        'standard_operation_cost_today': standard_operation_cost_today,
+        'standard_operation_cost_month': standard_operation_cost_month,
+        'duration_today': duration_today,
+        'duration_month': duration_month,
+        'unusual_operation_cost_today': unusual_operation_cost_today,
+        'unusual_operation_cost_month': unusual_operation_cost_month,
+        'total_time_today': total_time_today,
+        'total_time_month': total_time_month,
+        'total_cost_today': total_cost_today,
+        'total_cost_month': total_cost_month
+    }
+
+    return render(request, 'Accounting_button/user_operations_report.html', context)

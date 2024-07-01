@@ -23,7 +23,8 @@ from .views import UserStandardOperationLogListView, UserStandardOperationLogCre
 
 from .views import UserUnusualOperationLogListView, UserUnusualOperationLogCreateView, UserUnusualOperationLogUpdateView, UserUnusualOperationLogDeleteView
 
-
+from django.urls import path
+from .views import user_operations_report 
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
@@ -85,4 +86,6 @@ urlpatterns = [
     path('user_unusual_operation_logs/create/', UserUnusualOperationLogCreateView.as_view(), name='user_unusual_operation_log_create'),
     path('user_unusual_operation_logs/update/<int:pk>/', UserUnusualOperationLogUpdateView.as_view(), name='user_unusual_operation_log_update'),
     path('user_unusual_operation_logs/delete/<int:pk>/', UserUnusualOperationLogDeleteView.as_view(), name='user_unusual_operation_log_delete'),
+
+    path('user_operations_report/', user_operations_report, name='user_operations_report'),
 ]

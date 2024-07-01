@@ -1,0 +1,95 @@
+{% extends "Accounting_button/base.html" %}
+
+{% block title %}Отчет по операциям пользователя{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Отчет по операциям пользователя</h1>
+    <p class="text-center">Добро пожаловать, {{ user.username }}!</p>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <!-- Стандартные операции -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title">Стандартные операции</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Норма времени сегодня</th>
+                                <th>Норма времени в этом месяце</th>
+                                <th>Стоимость операций сегодня</th>
+                                <th>Стоимость операций в этом месяце</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ time_norm_today }}</td>
+                                <td>{{ time_norm_month }}</td>
+                                <td>{{ standard_operation_cost_today|floatformat:2 }}</td>
+                                <td>{{ standard_operation_cost_month|floatformat:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Нестандартные операции -->
+            <div class="card mb-4">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="card-title">Нестандартные операции</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Продолжительность сегодня</th>
+                                <th>Продолжительность в этом месяце</th>
+                                <th>Стоимость операций сегодня</th>
+                                <th>Стоимость операций в этом месяце</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ duration_today }}</td>
+                                <td>{{ duration_month }}</td>
+                                <td>{{ unusual_operation_cost_today|floatformat:2 }}</td>
+                                <td>{{ unusual_operation_cost_month|floatformat:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Общие показатели операций -->
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="card-title">Общие показатели операций</h4>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Общее время сегодня</th>
+                                <th>Общее время в этом месяце</th>
+                                <th>Общая стоимость операций сегодня</th>
+                                <th>Общая стоимость операций в этом месяце</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ total_time_today }}</td>
+                                <td>{{ total_time_month }}</td>
+                                <td>{{ total_cost_today|floatformat:2 }}</td>
+                                <td>{{ total_cost_month|floatformat:2 }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
