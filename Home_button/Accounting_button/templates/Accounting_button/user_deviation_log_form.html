@@ -1,0 +1,66 @@
+{% extends "Accounting_button/base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}{{ form.instance.pk|yesno:"Edit Deviation Log,Create Deviation Log" }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title">{{ form.instance.pk|yesno:"Edit Deviation Log,Create Deviation Log" }}</h3>
+                </div>
+                <div class="card-body">
+                    <p>Welcome, {{ user.username }}!</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="{{ form.content.id_for_label }}" class="col-sm-3 col-form-label">{{ form.content.label }}</label>
+                            <div class="col-sm-9">
+                                {{ form.content|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.reason.id_for_label }}" class="col-sm-3 col-form-label">{{ form.reason.label }}</label>
+                            <div class="col-sm-9">
+                                {{ form.reason|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.client.id_for_label }}" class="col-sm-3 col-form-label">{{ form.client.label }}</label>
+                            <div class="col-sm-9">
+                                {{ form.client|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.inn.id_for_label }}" class="col-sm-3 col-form-label">{{ form.inn.label }}</label>
+                            <div class="col-sm-9">
+                                {{ form.inn|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.author.id_for_label }}" class="col-sm-3 col-form-label">{{ form.author.label }}</label>
+                            <div class="col-sm-9">
+                                {{ form.author|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="{{ form.comments.id_for_label }}" class="col-sm-3 col-form-label">{{ form.comments.label }}</label>
+                            <div class="col-sm-9">
+                                {{ form.comments|add_class:"form-control" }}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-9 offset-sm-3">
+                                <button type="submit" class="btn btn-primary">Save</button>
+                                <a href="{% url 'user_deviation_log_list' %}" class="btn btn-secondary ml-2">Back to List</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

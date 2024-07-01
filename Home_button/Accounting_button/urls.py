@@ -26,6 +26,10 @@ from .views import UserUnusualOperationLogListView, UserUnusualOperationLogCreat
 from django.urls import path
 from .views import user_operations_report 
 
+from django.urls import path
+from . import views 
+
+
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
     path('clients/create/', views.client_create, name='client_create'),
@@ -88,4 +92,10 @@ urlpatterns = [
     path('user_unusual_operation_logs/delete/<int:pk>/', UserUnusualOperationLogDeleteView.as_view(), name='user_unusual_operation_log_delete'),
 
     path('user_operations_report/', user_operations_report, name='user_operations_report'),
+
+    # другие пути
+    path('user_deviation_logs/', views.user_deviation_log_list, name='user_deviation_log_list'),
+    path('user_deviation_logs/create/', views.user_create_deviation_log, name='user_create_deviation_log'),
+    path('user_deviation_logs/<int:pk>/edit/', views.user_update_deviation_log, name='user_update_deviation_log'),
+    path('user_deviation_logs/<int:pk>/delete/', views.user_delete_deviation_log, name='user_delete_deviation_log'),
 ]

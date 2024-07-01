@@ -402,6 +402,11 @@ def delete_deviation_log(request, pk):
         return redirect('deviation_log_list')
     return render(request, 'Accounting_button/deviation_log_confirm_delete.html', {'log': log})
 
+
+
+
+
+
 from django.shortcuts import render
 from django.db.models import Sum
 from .models import StandardOperationLog
@@ -795,3 +800,55 @@ def user_operations_report(request):
     }
 
     return render(request, 'Accounting_button/user_operations_report.html', context)
+
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
+from .models import DeviationLog
+from .forms import DeviationLogForm
+
+@login_required
+def user_deviation_log_list(request):
+    logs = DeviationLog.objects.all()
+    return render(request, 'Accounting_button/user_deviation_log_list.html', {'logs': logs})
+
+@login_required
+def user_create_deviation_log(request):
+    if request.method == "POST":
+        form = DeviationLogForm(request.POST)
+        if form.is_valid():
+            log = form.save(commit=False)
+            log.author = request.user
+            if log.client:
+                log.inn = log.client.inn
+            log.save()
+            return redirect('user_deviation_log_list')
+    else:
+        form = DeviationLogForm()
+    return render(request, 'Accounting_button/user_deviation_log_form.html', {'form': form})
+
+@login_required
+def user_update_deviation_log(request, pk):
+    log = get_object_or_404(DeviationLog, pk=pk)
+    if log.author != request.user:
+        return redirect('user_deviation_log_list')
+    if request.method == 'POST':
+        form = DeviationLogForm(request.POST, instance=log)
+        if form.is_valid():
+            log = form.save(commit=False)
+            if log.client:
+                log.inn = log.client.inn
+            log.save()
+            return redirect('user_deviation_log_list')
+    else:
+        form = DeviationLogForm(instance=log)
+    return render(request, 'Accounting_button/user_deviation_log_form.html', {'form': form})
+
+@login_required
+def user_delete_deviation_log(request, pk):
+    log = get_object_or_404(DeviationLog, pk=pk)
+    if log.author != request.user:
+        return redirect('user_deviation_log_list')
+    if request.method == 'POST':
+        log.delete()
+        return redirect('user_deviation_log_list')
+    return render(request, 'Accounting_button/user_deviation_log_confirm_delete.html', {'log': log})

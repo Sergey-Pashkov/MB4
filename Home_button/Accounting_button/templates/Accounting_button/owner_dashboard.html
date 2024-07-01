@@ -12,8 +12,9 @@
 <a href="{% url 'unusual_operation_log_list' %}" class="btn btn-primary mb-2">View Unusual Operation Logs</a>
 <a href="{% url 'standard_operation_log_list' %}" class="btn btn-primary mb-2">View Standard Operation Logs</a>
 <a href="{% url 'deviation_log_list' %}" class="btn btn-primary mb-2">View Deviation Logs</a>
-<a href="{% url 'standard_operations_report' %}" class="btn btn-primary mb-2">Standard Operations Report</a> <!-- Новая кнопка для отчета по стандартным операциям -->
-<a href="{% url 'unusual_operations_report' %}" class="btn btn-primary mb-2">Unusual Operations Report</a> <!-- Новая кнопка для отчета по нестандартным операциям -->
-<a href="{% url 'operations_report' %}" class="btn btn-primary mb-2">Operations Report</a> <!-- Новая кнопка для объединенного отчета -->
+<a href="{% url 'standard_operations_report' %}" class="btn btn-primary mb-2">Standard Operations Report</a>
+<a href="{% url 'unusual_operations_report' %}" class="btn btn-primary mb-2">Unusual Operations Report</a>
+<a href="{% url 'operations_report' %}" class="btn btn-primary mb-2">Operations Report</a>
+<a href="{% url 'user_deviation_log_list' %}" class="btn btn-primary mb-2">View My Deviation Logs</a> <!-- Изменение стиля последней кнопки -->
 
 {% endblock %}

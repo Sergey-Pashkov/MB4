@@ -1,4 +1,3 @@
-<!-- templates/Accounting_button/director_dashboard.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Director Dashboard{% endblock %}
 {% block content %}
@@ -6,6 +5,9 @@
 <p>Welcome, {{ user.username }}!</p>
 
 <!-- Кнопка для перехода в список клиентов -->
-<a href="{% url 'client_list' %}" class="btn btn-primary">View Client List</a>
+<a href="{% url 'client_list' %}" class="btn btn-primary mb-2">View Client List</a>
+
+<!-- Кнопка для перехода в журнал отклонений -->
+<a href="{% url 'user_deviation_log_list' %}" class="btn btn-primary mb-2">View Deviation Logs</a>
 
 {% endblock %}

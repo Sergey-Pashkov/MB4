@@ -1,0 +1,45 @@
+{% extends "Accounting_button/base.html" %}
+{% block title %}Deviation Log List{% endblock %}
+{% block content %}
+<h1>Deviation Log List</h1>
+<p>Welcome, {{ user.username }}!</p>
+<a href="{% url 'user_create_deviation_log' %}" class="btn btn-primary mb-3">Add New Log</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Content</th>
+            <th>Reason</th>
+            <th>Client</th>
+            <th>INN</th>
+            <th>Author</th>
+            <th>Timestamp</th>
+            <th>Comments</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.id }}</td>
+            <td>{{ log.content }}</td>
+            <td>{{ log.get_reason_display }}</td>
+            <td>{{ log.client }}</td>
+            <td>{{ log.inn }}</td>
+            <td>{{ log.author }}</td>
+            <td>{{ log.timestamp }}</td>
+            <td>{{ log.comments }}</td>
+            <td>
+                {% if log.author == user %}
+                <a href="{% url 'user_update_deviation_log' log.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <form method="post" action="{% url 'user_delete_deviation_log' log.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
