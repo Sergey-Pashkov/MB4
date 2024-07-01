@@ -4,11 +4,11 @@
 <h1>Accountant Dashboard</h1>
 <p>Welcome, {{ user.username }}!</p>
 
-<!-- Ссылка на список клиентов -->
-<a href="{% url 'client_list' %}" class="btn btn-primary">View Client List</a>
-
 <!-- Ссылка на персональный журнал стандартных операций -->
 <a href="{% url 'user_standard_operation_log_list' %}" class="btn btn-secondary mt-3">View My Standard Operation Logs</a>
+
+<!-- Ссылка на персональный журнал нестандартных операций -->
+<a href="{% url 'user_unusual_operation_log_list' %}" class="btn btn-secondary mt-3">View My Unusual Operation Logs</a>
 
 <p>Placeholder for accountant content</p>
 {% endblock %}
