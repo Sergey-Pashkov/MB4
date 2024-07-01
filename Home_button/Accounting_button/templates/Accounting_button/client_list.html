@@ -1,9 +1,8 @@
-<!-- templates/Accounting_button/client_list.html -->
 {% extends "Accounting_button/base.html" %}
 {% block title %}Client List{% endblock %}
 {% block content %}
 <h1>Client List</h1>
-<p>Welcome, {{ user.username }}!</p> <!-- Приветствие пользователя -->
+<p>Welcome, {{ user.username }}!</p>
 <a href="{% url 'client_create' %}" class="btn btn-primary mb-3">Add Client</a>
 <table class="table">
     <thead>
@@ -20,6 +19,8 @@
             <th>Email</th>
             <th>Postal Address</th>
             <th>Comments</th>
+            <th>Author</th>
+            <th>Created At</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -38,6 +39,8 @@
             <td>{{ client.email }}</td>
             <td>{{ client.postal_address }}</td>
             <td>{{ client.comments }}</td>
+            <td>{{ client.author }}</td>
+            <td>{{ client.created_at }}</td>
             <td>
                 <a href="{% url 'client_edit' client.id %}" class="btn btn-warning btn-sm">Edit</a>
                 <form method="post" action="{% url 'client_delete' client.id %}" style="display:inline;">

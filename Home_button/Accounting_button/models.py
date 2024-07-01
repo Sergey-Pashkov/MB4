@@ -37,6 +37,20 @@ class Constant(models.Model):
                 self.value = 0
         super().save(*args, **kwargs)
 
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
+
+from django.db import models
+from django.contrib.auth import get_user_model
+from django.utils import timezone
+
+User = get_user_model()
+
 class Client(models.Model):
     name = models.CharField(max_length=255, verbose_name="Наименование", blank=False, null=False)
     org_form = models.CharField(max_length=255, verbose_name="Организационная форма", blank=True, null=True)
@@ -49,6 +63,8 @@ class Client(models.Model):
     email = models.EmailField(verbose_name="Электронная почта", blank=False, null=False)
     postal_address = models.CharField(max_length=255, verbose_name="Почтовый адрес", blank=False, null=False)
     comments = models.TextField(verbose_name="Комментарии", blank=True, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, verbose_name="Автор", default=1)
+    created_at = models.DateTimeField(default=timezone.now, verbose_name="Дата и время записи")
 
     def __str__(self):
         return self.name

@@ -21,6 +21,9 @@ class ConstantForm(forms.ModelForm):
         self.fields['value'].widget.attrs.update({'id': f'id_value_{self.instance.id}'})
         self.fields['comment'].widget.attrs.update({'id': f'id_comment_{self.instance.id}'})
 
+from django import forms
+from .models import Client
+
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client

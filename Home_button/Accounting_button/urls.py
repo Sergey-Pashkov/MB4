@@ -32,13 +32,11 @@ from . import views
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
-    path('clients/create/', views.client_create, name='client_create'),
-    path('clients/delete/<int:client_id>/', views.client_delete, name='client_delete'),
+
     path('accountant/', views.accountant_dashboard, name='accountant_dashboard'),
     path('director/', views.director_dashboard, name='director_dashboard'),
     path('owner/', views.owner_dashboard, name='owner_dashboard'),
-    path('clients/', views.client_list, name='client_list'),
-    path('clients/edit/<int:client_id>/', views.client_edit, name='client_edit'),
+
     path('users/', views.user_list, name='user_list'),
     path('users/add/', views.user_add, name='user_add'),
     path('users/edit/<int:user_id>/', views.user_edit, name='user_edit'),
@@ -98,4 +96,9 @@ urlpatterns = [
     path('user_deviation_logs/create/', views.user_create_deviation_log, name='user_create_deviation_log'),
     path('user_deviation_logs/<int:pk>/edit/', views.user_update_deviation_log, name='user_update_deviation_log'),
     path('user_deviation_logs/<int:pk>/delete/', views.user_delete_deviation_log, name='user_delete_deviation_log'),
+
+    path('clients/', views.client_list, name='client_list'),
+    path('clients/create/', views.client_create, name='client_create'),
+    path('clients/edit/<int:client_id>/', views.client_edit, name='client_edit'),
+    path('clients/delete/<int:client_id>/', views.client_delete, name='client_delete'),
 ]

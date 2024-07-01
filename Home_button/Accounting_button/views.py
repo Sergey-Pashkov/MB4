@@ -41,28 +41,6 @@ def owner_dashboard(request):
     return render(request, 'Accounting_button/owner_dashboard.html', {'user': request.user})
 
 
-@login_required
-def client_list(request):
-    clients = Client.objects.all()
-    total_clients = clients.count()  # Считаем общее количество клиентов
-    return render(request, 'Accounting_button/client_list.html', {
-        'clients': clients,
-        'total_clients': total_clients  # Передаем общее количество клиентов в контекст
-    })
-
-
-@login_required
-def client_edit(request, client_id):
-    client = get_object_or_404(Client, id=client_id)
-    if request.method == 'POST':
-        form = ClientForm(request.POST, instance=client)
-        if form.is_valid():
-            form.save()
-            return redirect('client_list')
-    else:
-        form = ClientForm(instance=client)
-    return render(request, 'Accounting_button/client_edit.html', {'form': form, 'client': client})
-
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import CustomUser
@@ -119,30 +97,6 @@ def user_delete(request, user_id):
         return redirect('user_list')
     return render(request, 'Accounting_button/user_confirm_delete.html', {'user': user})
 
-# views.py
-@login_required
-def client_create(request):
-    if request.method == 'POST':
-        client_form = ClientForm(request.POST)
-        if client_form.is_valid():
-            client_form.save()
-            return redirect('client_list')
-    else:
-        client_form = ClientForm()
-    return render(request, 'Accounting_button/client_create.html', {'form': client_form})
-
-
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-
-@login_required
-def client_delete(request, client_id):
-    client = get_object_or_404(Client, id=client_id)
-    if request.method == 'POST':
-        client.delete()
-        return HttpResponseRedirect(reverse('client_list'))
-    return render(request, 'Accounting_button/client_confirm_delete.html', {'client': client})
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -402,11 +356,6 @@ def delete_deviation_log(request, pk):
         return redirect('deviation_log_list')
     return render(request, 'Accounting_button/deviation_log_confirm_delete.html', {'log': log})
 
-
-
-
-
-
 from django.shortcuts import render
 from django.db.models import Sum
 from .models import StandardOperationLog
@@ -543,10 +492,6 @@ def operations_report(request):
     }
 
     return render(request, 'Accounting_button/operations_report.html', context)
-
-
-
-
 
 
 from django.shortcuts import get_object_or_404
@@ -852,3 +797,46 @@ def user_delete_deviation_log(request, pk):
         log.delete()
         return redirect('user_deviation_log_list')
     return render(request, 'Accounting_button/user_deviation_log_confirm_delete.html', {'log': log})
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Client
+from .forms import ClientForm
+
+@login_required
+def client_list(request):
+    clients = Client.objects.all()
+    return render(request, 'Accounting_button/client_list.html', {'clients': clients})
+
+@login_required
+def client_create(request):
+    if request.method == "POST":
+        form = ClientForm(request.POST)
+        if form.is_valid():
+            client = form.save(commit=False)
+            client.author = request.user
+            client.save()
+            return redirect('client_list')
+    else:
+        form = ClientForm()
+    return render(request, 'Accounting_button/client_form.html', {'form': form})
+
+@login_required
+def client_edit(request, client_id):
+    client = get_object_or_404(Client, id=client_id)
+    if request.method == "POST":
+        form = ClientForm(request.POST, instance=client)
+        if form.is_valid():
+            form.save()
+            return redirect('client_list')
+    else:
+        form = ClientForm(instance=client)
+    return render(request, 'Accounting_button/client_form.html', {'form': form})
+
+@login_required
+def client_delete(request, client_id):
+    client = get_object_or_404(Client, id=client_id)
+    if request.method == "POST":
+        client.delete()
+        return redirect('client_list')
+    return render(request, 'Accounting_button/client_confirm_delete.html', {'client': client})
